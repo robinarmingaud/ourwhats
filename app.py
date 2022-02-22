@@ -1,3 +1,4 @@
+import flask
 from flask import Flask
 from database.database import db, init_database
 
@@ -7,7 +8,7 @@ with app.test_request_context():
     init_database()
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/database.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_TRACK_MODIFICAyTIONS"] = False
 
 @app.route('/login')
 def login():  # put application's code here
