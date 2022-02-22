@@ -1,0 +1,26 @@
+body{
+    margin: 0;
+  padding: 0;
+  background-color: #17a2b8;
+}
+.container{
+    margin: 0;
+  padding: 0;
+  background-color: #1FFFFF;
+}
+.sidebar{
+    margin :0;
+    padding : 0;
+    width: 30%;
+    background-color: #FFFFFF;
+    height: 100%;
+}
+.message-history{
+    border: 1px solid #000000;
+}
+.input-group{
+    padding : 10px;
+}
+#form1{
+    margin-left :10px;
+}

@@ -48,6 +48,16 @@ def join_group(user, group):
     db.session.commit()
     return
 
+@app.route('/messages')
+def messages():
+    user1 = create_user('Robin')
+    group1 = create_group('Equipe 1')
+    join_group(user1, group1)
+    create_message('uwu', user1, group1)
+
+    groups = Group.query.all()
+    return flask.render_template("messages.html.jinja2", groups=groups)
+
 @app.route('/login')
 def login():  # put application's code here
     return flask.render_template("login.html.jinja2")
