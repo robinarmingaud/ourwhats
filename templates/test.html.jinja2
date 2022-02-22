@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>Sport management</title>
+</head>
+<body>
+    {% for group in groups %}
+        {{ group.name }}
+    <ul>
+        {% for user in group.users %}
+            <li>{{ user.name }}
+            <ul>
+                {% for msg in user.messages %}
+                    <li>{{ msg.date }} {{ msg.content }}</li>
+                {% endfor %}
+            </ul>
+            </li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+</body>
+</html>
