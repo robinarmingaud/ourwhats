@@ -13,10 +13,10 @@ body{
     padding : 0;
     width: 30%;
     background-color: #FFFFFF;
-    height: 100%;
+    min-height: 100%;
 }
 .message-history{
-    border: 1px solid #000000;
+    border-top: 1px solid #000000;
 }
 .input-group{
     padding : 10px;
