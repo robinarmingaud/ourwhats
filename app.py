@@ -1,11 +1,12 @@
 from flask import Flask
+import flask
 
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
+@app.route('/login')
+def login():  # put application's code here
+    return flask.render_template("login.html.jinja2")
 
 
 if __name__ == '__main__':
