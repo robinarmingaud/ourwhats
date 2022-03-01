@@ -53,7 +53,7 @@ def messages():
     user1 = create_user('Robin')
     group1 = create_group('Equipe 1')
     join_group(user1, group1)
-    create_message('uwu', user1, group1)
+    create_message('Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut odio temporibus voluptas error distinctio hic quae corrupti vero doloribus optio! Inventore ex quaerat modi blanditiis', user1, group1)
 
     groups = Group.query.all()
     return flask.render_template("messages.html.jinja2", groups=groups)

@@ -10,14 +10,50 @@ html, body{
     padding : 0;
     width: 30%;
     background-color: #FFFFFF;
-    min-height: 100%;
+    height: 100%;
+    overflow: auto;
 }
 .message-history{
     border-top: 1px solid #000000;
+    height: 100%;
 }
 .input-group{
     padding : 10px;
 }
-#form1{
+#filter-friends{
     margin-left :10px;
+}
+.chat_img img{
+    border-radius: 50%;
+	float: left;
+	width: 12%;
+}
+
+.chat_ib {
+	float: left;
+	padding: 0 0 0 15px;
+	width: 88%;
+}
+
+.chat_people {
+	overflow: hidden;
+	clear: both;
+}
+
+.chat_list {
+	border-bottom: 1px solid #ddd;
+	margin: 0;
+	padding: 18px 16px 10px;
+}
+
+ul {
+    padding: 0;
+}
+
+.message_notif{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    color: #9C9C9C ;
 }
