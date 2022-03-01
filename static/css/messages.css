@@ -45,7 +45,10 @@ html, body{
 	margin: 0;
 	padding: 18px 16px 10px;
 }
+.chat_list:hover{
+    background-color: #dddddd;
 
+}
 ul {
     padding: 0;
 }
@@ -56,4 +59,12 @@ ul {
     text-overflow: ellipsis;
     max-width: 100%;
     color: #9C9C9C ;
+}
+
+.chat_date{
+    float:right;
+    color: #747474;
+    display: block;
+    font-size: 12px;
+    margin: 8px 0 0;
 }
