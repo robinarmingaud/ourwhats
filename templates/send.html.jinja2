@@ -1,0 +1,23 @@
+<html>
+<head>
+    <title>Envoyer un message</title>
+</head>
+<body>
+    <form action="{{ url_for("form_send_msg") }}" method="post">
+        <input type="text" name="user_id" placeholder="Votre nom">
+        <input type="group" name="group_id" placeholder="Votre groupe">
+        <input type="text" name="msg" placeholder="Votre message">
+        <input type="submit">
+    </form>
+
+    {% if errors %}
+    Errors:
+    <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+</body>
+</html>
