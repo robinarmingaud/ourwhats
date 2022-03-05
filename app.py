@@ -53,13 +53,9 @@ def join_group(user, group):
 def is_in_group(user_id, group_id):
     return db.session.query(group_user_table).filter_by(group_id=group_id, user_id=user_id).first() is not None
 
+@app.route('/')
 @app.route('/messages')
 def messages():
-    user1 = create_user('Robin')
-    group1 = create_group('Equipe 1')
-    join_group(user1, group1)
-    create_message('Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut odio temporibus voluptas error distinctio hic quae corrupti vero doloribus optio! Inventore ex quaerat modi blanditiis', user1, group1)
-
     groups = Group.query.all()
     return flask.render_template("messages.html.jinja2", groups=groups)
 
@@ -85,7 +81,7 @@ def form_send_msg():
         return show_form(flask.request.form, errors)
     else:
         return send_form(flask.request.form)
-    return flask.render_template('send.html.jinja2')
+    return flask.render_template('messages.html.jinja2')
 
 #form is invalid if: user or group doesn't exist, user is not in group, msg is empty
 def is_form_valid(form):

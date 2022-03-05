@@ -14,6 +14,7 @@ class Group(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
+    picture = db.Column(db.Text)
     messages = db.relationship('Message', backref='sender')
     #password = db.Column(db.String(128))
 
