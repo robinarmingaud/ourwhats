@@ -34,25 +34,30 @@
 </div>
 <div class="main-panel">
     <div class="top-bar">
-        <h1>Equipe1</h1>
+        <h1>{{ active_group.name }}</h1>
     </div>
     <div class="msg-section">
-        <div class="received-row">
-        <img class="pp" src="https://scontent-cdg2-1.xx.fbcdn.net/v/t39.30808-1/272297477_4660834673965831_1336668270905742648_n.jpg?stp=c7.0.100.100a_dst-jpg_p100x100&_nc_cat=102&ccb=1-5&_nc_sid=7206a8&_nc_ohc=QcsCJ5U4WfMAX-5LdXd&_nc_oc=AQnK5HqHiR_iomPghT3LpJXGPqONJV_Q75ePEN2QEu0l5dBqYfQO4UiFNNKalbnGvAA&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent-cdg2-1.xx&oh=00_AT8K9sPjkOhf8y9L7W3S_cOwm0fhCfWnP8I9tOWM-AdtTQ&oe=622672C8">
-        <div class = "received-wrap">
-          <h2 class="name">Maxime</h2>
-          <div class="received-bubble">
-            <p>Salut, ceci est un test pour voir comment rend la police test test.ôqig^sdofj^dpfokbposidjfb</p>
-            <h3 class="date">11:05 mardi</h3>
-          </div>
-        </div>
-        </div>
-        <div class="sent-row">
-            <div class="sent-bubble">
-                <p>Salut, ceci est un test pour voir comment rend la police test test.ôqig^sdofj^dpfokbposidjfb</p>
-                <h3 class="date">11:07 mardi</h3>
-            </div>
-        </div>
+        {% for msg in active_group.messages %}
+            {% if msg.sender_id!=active_user.id %}
+                <div class="received-row">
+                    <img class="pp" src="database/img/{{ msg.sender_id }}">
+                    <div class="received-wrap">
+                        <h2 class="name">{{ msg.sender_id }}</h2>
+                        <div class="received-bubble">
+                            <p>{{ msg.content }}</p>
+                            <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="sent-row">
+                    <div class="sent-bubble">
+                        <p>{{ msg.content }}</p>
+                        <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
     </div>
     <div class="bottom-bar">
         <form action="{{ url_for("form_send_msg") }}" method="post">
@@ -64,3 +69,4 @@
     </div>
 </div>
 </body>
+
