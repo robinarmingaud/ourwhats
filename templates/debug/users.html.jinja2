@@ -1,0 +1,26 @@
+<html>
+<head>
+    <title>Créer un utilisateur</title>
+</head>
+<body>
+
+    <form action="{{ url_for("debug_users") }}" method="post">
+        <input type="text" name="user_name" placeholder="new user name">
+        <input type="submit">
+    </form>
+
+    {% if errors %}
+    Errors:
+    <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <h1>Liste des utilisateurs :</h1>
+    {% for user in users %}
+        <li>{{ user.id }} : {{ user.name }}</li>
+    {% endfor %}
+</body>
+</html>
