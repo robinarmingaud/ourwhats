@@ -1,3 +1,4 @@
 flask==2.0.3
 flask-wtf
 flask-sqlalchemy
+flask_login

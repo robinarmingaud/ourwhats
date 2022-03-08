@@ -19,12 +19,12 @@
 		            <div class="chat_people">
 			            <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
 			                <div class="chat_ib">
-                                {% for user in group.users %}
-                                    {% for msg in user.messages %}
+                                    {% set msg = group.messages | last %}
                                         <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
-                                            <p class="message_notif"> {{ user.name }} : {{ msg.content }} </p>
-                                    {% endfor %}
-                                {% endfor %}
+                                            {% set selection = [] %}
+                                            {% for x in group.users if x.id == msg.sender_id %}{{selection.append(x)}}{% endfor %}
+                                            {% set sender = selection | first %}
+                                                <p class="message_notif"> {{ sender.name }} : {{ msg.content }} </p>
                             </div>
                         </div>
                     </div>
@@ -69,4 +69,3 @@
     </div>
 </div>
 </body>
-
