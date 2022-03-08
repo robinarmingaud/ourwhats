@@ -9,16 +9,16 @@
 <body>
 <div class="sidebar">
     <div class="input-group">
-        <h4>Messages</h4>
+        <p>{{ current_user.name }}</p>
         <input type="text" id="filter-friends" class="form-control" placeholder="Search" aria-label="Search" />
     </div>
     <div class="message-history">
         <ul>
-            {% for group in groups if active_user in group.users %}
+            {% for group in groups if current_user in group.users %}
                 <div class="chat_list" id="{{ group.id }}" data-name="{{ group.name }}">
                     <script type="text/javascript">
                         document.getElementById("{{ group.id }}").onclick = function () {
-                            location.href = "/t/{{active_user.id}}/{{ group.id }}";
+                            location.href = "/{{ group.id }}";
                         };
                     </script>
 		            <div class="chat_people">
@@ -71,7 +71,6 @@
     </div>
     <div class="bottom-bar">
         <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post">
-            <input type="group" name="group_id" placeholder="group ID">
             <input type="text" name="msg" placeholder="Votre message">
             <input type="submit">
         </form>

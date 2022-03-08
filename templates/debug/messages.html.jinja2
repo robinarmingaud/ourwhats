@@ -4,7 +4,7 @@
 </head>
 <body>
 
-    <form action="{{ url_for("debug_send") }}" method="post">
+    <form action="{{ url_for("debug_messages") }}" method="post">
         <input type="text" name="user_id" placeholder="user ID">
         <input type="group" name="group_id" placeholder="group ID">
         <input type="text" name="msg" placeholder="Votre message">
@@ -21,13 +21,15 @@
     {% endif %}
 
     {% for group in groups %}
-        {{ group.name }}
+        {{ group.id }} : {{ group.name }}
     <ul>
         {% for user in group.users %}
             <li>{{ user.id }} : {{ user.name }}
             <ul>
                 {% for msg in user.messages %}
-                    <li>{{ msg.date }} {{ msg.content }}</li>
+                    {% if msg in group.messages %}
+                        <li>{{ msg.date }} {{ msg.content }}</li>
+                    {% endif %}
                 {% endfor %}
             </ul>
             </li>
