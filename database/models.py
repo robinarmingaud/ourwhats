@@ -17,6 +17,20 @@ class User(db.Model):
     messages = db.relationship('Message', backref='sender')
     #password = db.Column(db.String(128))
 
+    #https://realpython.com/using-flask-login-for-user-management-with-flask/
+    authenticated = db.Column(db.Boolean, default=False)
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_active(self):
+        return True
+
+    def get_id(self):
+        return self.id
+
+    def is_anonymous(self):
+        return False
+
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)

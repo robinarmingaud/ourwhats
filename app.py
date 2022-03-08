@@ -1,16 +1,14 @@
 from datetime import datetime
 
 import flask
-from flask import Flask
+from flask_login import login_required, LoginManager
 from database.database import db, init_database
 from database.models import Group, User, Message, group_user_table
-import flask
 
-
-app = Flask(__name__)
+app = flask.Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
+login_manager = LoginManager()
 
 db.init_app(app)
 
@@ -53,12 +51,23 @@ def join_group(user, group):
 def is_in_group(user_id, group_id):
     return db.session.query(group_user_table).filter_by(group_id=group_id, user_id=user_id).first() is not None
 
-@app.route('/t/<user_id>/<group_id>')
+@login_required
+@app.route('/t/<user_id>/<group_id>', methods=['POST','GET'])
 def messages(user_id, group_id):
     groups = Group.query.all()
     active_group = Group.query.filter_by(id=group_id).one()
     active_user = User.query.filter_by(id=user_id).one()
-    return flask.render_template("messages.html.jinja2", groups=groups, active_user=active_user, active_group=active_group)
+
+    form_is_valid, errors = is_form_valid(flask.request.form)
+    if form_is_valid:
+        #POST method
+        create_message(
+            content=flask.request.form.get('msg'),
+            user=active_user,
+            group=active_group)
+    #GET method
+    return flask.render_template("messages.html.jinja2",
+                                 groups=groups, active_user=active_user, active_group=active_group, errors = errors)
 
 @app.route('/login')
 def login():  # put application's code here
@@ -74,14 +83,6 @@ def test():
     groups = Group.query.all()
 
     return flask.render_template('test.html.jinja2', groups=groups)
-
-@app.route('/send', methods=['POST','GET'])
-def form_send_msg():
-    form_is_valid, errors = is_form_valid(flask.request.form)
-    if not form_is_valid:
-        return show_form(flask.request.form, errors)
-    else:
-        return send_form(flask.request.form)
 
 #form is invalid if: user or group doesn't exist, user is not in group, msg is empty
 def is_form_valid(form):
@@ -120,21 +121,9 @@ def is_form_valid(form):
     print("############", errors)
     return result, errors
 
-def show_form(form, errors):
-    return flask.render_template('send.html.jinja2', errors = errors)
-
-def send_form(form):
-    user = User.query.filter_by(id=form.get('user_id')).one()
-    group = Group.query.filter_by(id=form.get('group_id')).one()
-    msg = create_message(
-        content=form.get('msg'),
-        user=user,
-        group=group
-    )
-    groups = Group.query.all()
-    return flask.render_template("messages.html.jinja2", groups=groups, active_user=user, active_group=group)
-
-
+@login_manager.user_loader
+def user_loader(user_id):
+    return User.query.get(user_id)
 
 if __name__ == '__main__':
     app.run()

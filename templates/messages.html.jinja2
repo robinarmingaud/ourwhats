@@ -60,7 +60,7 @@
         {% endfor %}
     </div>
     <div class="bottom-bar">
-        <form action="{{ url_for("form_send_msg") }}" method="post">
+        <form action="{{ url_for("messages", user_id=active_user.id, group_id=active_group.id   ) }}" method="post">
             <input type="text" name="user_id" placeholder="user ID">
             <input type="group" name="group_id" placeholder="group ID">
             <input type="text" name="msg" placeholder="Votre message">
