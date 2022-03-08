@@ -1,21 +1,30 @@
+import os
 from datetime import datetime
 
 import flask
 from flask import redirect, url_for
 from flask_login import login_required, LoginManager, login_user, current_user, logout_user
+from werkzeug.utils import secure_filename
 from database.database import db, init_database
 from database.models import Group, User, Message, group_user_table
 
+#https://stackoverflow.com/questions/44926465/upload-image-in-flask
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
+
 app = flask.Flask(__name__)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 app.secret_key = 'xxxxyyyyyzzzzz'
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 db.init_app(app)
-
 with app.test_request_context():
     init_database()
 
@@ -51,6 +60,7 @@ def clean_model_table(model):
     for row in model.query.all():
         db.session.delete(row)
     db.session.commit()
+    db.create_all()
     return
 
 def create_user(name):
@@ -87,8 +97,8 @@ def delete_group(group):
     db.session.commit()
     return
 
-def create_message(content, user, group):
-    msg = Message(content=content, sender=user, group=group, date=datetime.now())
+def create_message(content, user, group, filename):
+    msg = Message(content=content, sender=user, group=group, date=datetime.now(), filename=filename)
     db.session.add(msg)
     db.session.commit()
     return msg
@@ -118,9 +128,17 @@ def messages(group_id):
             content=form.get('msg'),
             user=current_user,
             group=active_group)
-    #GET method
+
+    def get_sender_name(msg):
+        users = User.query.all()
+        for user in users:
+            if user.id == msg.sender_id:
+                return user.name
+        return "???"
+
+    # GET method
     return flask.render_template("main_view.html.jinja2",
-                                 groups=groups, active_group=active_group, errors=errors)
+                                 groups=groups, active_group=active_group, errors=errors, get_sender_name=get_sender_name)
 
 
 @app.route('/login', methods=['POST','GET'])
@@ -194,14 +212,22 @@ def debug_participations():
 def debug_messages():
 
     form = flask.request.form
+    request = flask.request
     form_is_valid, errors = is_debug_msg_form_valid(form)
 
-    if form_is_valid:
+    if request.method =='POST' and form_is_valid:
         # POST method
+        filename=''
+        file=request.files['file']
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         create_message(
             content=form.get('msg'),
-            user=User.query.filter_by(id=form.get('user_id')).first(),
-            group=Group.query.filter_by(id=form.get('group_id')).first()
+            user=User.query.filter_by(id=form.get('user_id')).first(),            group=Group.query.filter_by(id=form.get('group_id')).first(),
+            filename=filename
         )
     # GET method
 
@@ -262,8 +288,9 @@ def is_debug_msg_form_valid(form):
             result = False
             errors += ['group does not exist']
 
-    content = form.get('msg', "")
-    if content == "":
+    content = form.get('msg', '')
+    file = form.get('file', '')
+    if content == "": # and file = '':
         result = False
         errors += ['msg field is empty']
 
@@ -303,6 +330,14 @@ def is_debug_part_form_valid(form):
 @login_manager.user_loader
 def user_loader(user_id):
     return User.query.get(user_id)
+
+def allowed_file(filename):
+    return ('.' in filename) and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# def change_profile_pic(user, ):
+#     user.has_profile_pic = True
+#     db.session.add(user)
+#     db.session.commit()
 
 if __name__ == '__main__':
     app.run()

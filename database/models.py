@@ -15,6 +15,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     messages = db.relationship('Message', backref='sender')
+    has_profile_pic = db.Column(db.Boolean, default=False)
     #password = db.Column(db.String(128))
 
     #https://realpython.com/using-flask-login-for-user-management-with-flask/
@@ -38,3 +39,4 @@ class Message(db.Model):
     date = db.Column(db.DateTime)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     group_id = db.Column(db.Integer, db.ForeignKey('group.id'))
+    filename = db.Column(db.Text)

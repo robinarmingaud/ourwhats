@@ -4,10 +4,11 @@
 </head>
 <body>
 
-    <form action="{{ url_for("debug_messages") }}" method="post">
+    <form action="{{ url_for("debug_messages") }}" method="post" enctype="multipart/form-data">
         <input type="text" name="user_id" placeholder="user ID">
         <input type="group" name="group_id" placeholder="group ID">
         <input type="text" name="msg" placeholder="Votre message">
+        <input type="file" name="file">
         <input type="submit">
     </form>
 
@@ -28,7 +29,11 @@
             <ul>
                 {% for msg in user.messages %}
                     {% if msg in group.messages %}
-                        <li>{{ msg.date }} {{ msg.content }}</li>
+                        <li>{{ msg.date }} | {{ msg.content }}
+                            {% if msg.filename %}
+                                <a href="{{ url_for('static', filename = '/uploads/'+msg.filename) }}" target="_blank">PJ</a>
+                            {% endif %}
+                        </li>
                     {% endif %}
                 {% endfor %}
             </ul>

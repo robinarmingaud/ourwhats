@@ -29,25 +29,25 @@ body{
 }
 .chat_img img{
     border-radius: 50%;
-	float: left;
-	width: 12%;
+    float: left;
+    width: 12%;
 }
 
 .chat_ib {
-	float: left;
-	padding: 0 0 0 15px;
-	width: 88%;
+    float: left;
+    padding: 0 0 0 15px;
+    width: 88%;
 }
 
 .chat_people {
-	overflow: hidden;
-	clear: both;
+    overflow: hidden;
+    clear: both;
 }
 
 .chat_list {
-	border-bottom: 1px solid #ddd;
-	margin: 0;
-	padding: 18px 16px 10px;
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+    padding: 18px 16px 10px;
 }
 .chat_list:hover{
     background-color: #dddddd;
@@ -97,95 +97,96 @@ ul {
 }
 
 .received-row {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
 }
 
 .name {
-  font: normal 1em 'Trebuchet MS';
-  margin: 0;
+    font: normal 1em 'Trebuchet MS';
+    margin: 0;
 }
 
 .pp {
-  transform: scale(0.8);
-  border-radius: 100%;
-  position: relative;
-  justify-self: start;
-  align-self: start;
+    transform: scale(0.8);
+    border-radius: 100%;
+    position: relative;
+    justify-self: start;
+    align-self: start;
 
-  width: 50px;
-  margin: 0;
+    width: 50px;
+    margin: 0;
 }
 
 .received-wrap{
-  max-width: 50%;
+    max-width: 50%;
 }
 .received-bubble {
-  background-color: #4b4b4b;
-  padding: 0.8em 1em;
-  text-align: left;
-  border-radius: 0 1em 1em 1em;
-  display: inline-block;
-  overflow-wrap: break-word;
-  position: relative;
+    background-color: #4b4b4b;
+    padding: 0.8em 1em;
+    text-align: left;
+    border-radius: 0 1em 1em 1em;
+    display: inline-block;
+    overflow-wrap: break-word;
+    position: relative;
 
-  font-size: 1em;
-  font-weight: 200;
+    font-size: 1em;
+    font-weight: 200;
 
-  margin: 0;
+    margin: 0;
 }
 
 p{
-  margin: 0;
+    margin: 0;
 }
 
 .date {
-  margin: 0;
-  position: absolute;
-  visibility: hidden;
-  bottom: -25px;
-  font: italic 0.8em 'Trebuchet MS';
-  color: black;
-  background-color: #FFFC;
-  padding: 5px;
-  border-radius: 6px;
-  width: auto;
-  text-align: center;
+    margin: 0;
+    position: absolute;
+    visibility: hidden;
+    bottom: -25px;
+    font: italic 0.8em 'Trebuchet MS';
+    color: black;
+    background-color: #FFFC;
+    padding: 5px;
+    border-radius: 6px;
+    width: auto;
+    text-align: center;
+    z-index: 1;
 }
 
 .received-bubble .date {
-  left: 0;
+    left: 0;
 }
 
 .received-bubble:hover .date, .sent-bubble:hover .date {
-  visibility: visible;
+    visibility: visible;
 }
 
 .sent-row{
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  margin: 10px 0 10px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 10px 0 10px 0;
 }
 
 .sent-bubble{
-  background-color: red;
-  padding: 0.8em 1em;
-  text-align: left;
-  border-radius: 1em 0 1em 1em;
-  position: relative;
-  max-width: 70%;
+    background-color: red;
+    padding: 0.8em 1em;
+    text-align: left;
+    border-radius: 1em 0 1em 1em;
+    position: relative;
+    max-width: 70%;
 
-  font-size: 1em;
-  font-weight: 200;
+    font-size: 1em;
+    font-weight: 200;
 
-  margin: 0;
+    margin: 0;
 }
 
 .sent-bubble .date {
-  right: 0;
+    right: 0;
 }
 
 .top-bar {

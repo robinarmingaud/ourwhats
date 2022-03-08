@@ -26,12 +26,7 @@
 			                <div class="chat_ib">
                                     {% set msg = group.messages | last %}
                                         <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
-                                            {% set selection = [] %}
-                                            {% for user in group.users if user.id == msg.sender_id %}
-                                                {% set selection=selection.append(user) %}
-                                            {% endfor %}
-                                            {% set sender = selection | first %}
-                                                <p class="message_notif"> {{ sender.name }} : {{ msg.content }} </p>
+                                        <p class="message_notif"> {{ get_sender_name(msg) }} : {{ msg.content }} </p>
                             </div>
                         </div>
                     </div>
@@ -50,9 +45,9 @@
         {% for msg in active_group.messages %}
             {% if msg.sender_id!=current_user.id %}
                 <div class="received-row">
-                    <img class="pp" src="database/img/{{ msg.sender_id }}">
+                    <img class="pp" src="static/profile_pics/{{ msg.sender_id | default('default') }}.jpg">
                     <div class="received-wrap">
-                        <h2 class="name">{{ msg.sender_id }}</h2>
+                        <h2 class="name">{{ get_sender_name(msg) }}</h2>
                         <div class="received-bubble">
                             <p>{{ msg.content }}</p>
                             <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
