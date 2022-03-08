@@ -1,0 +1,23 @@
+<form action="{{ url_for("debug_participations") }}" method="post">
+    <input type="text" name="user_id" placeholder="user id">
+    <input type="text" name="group_id" placeholder="group id">
+    <input type="submit">
+</form>
+
+{% if errors %}
+    Errors:
+    <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+{% for user in users %}
+        {{ user.id }} : {{ user.name }}
+    <ul>
+        {% for group in user.groups %}
+            <li>{{ group.id }} : {{ group.name }}</li>
+        {% endfor %}
+    </ul>
+{% endfor %}

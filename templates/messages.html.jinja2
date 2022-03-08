@@ -45,7 +45,7 @@
     </div>
     <div class="msg-section">
         {% for msg in active_group.messages %}
-            {% if msg.sender_id!=active_user.id %}
+            {% if msg.sender_id!=current_user.id %}
                 <div class="received-row">
                     <img class="pp" src="database/img/{{ msg.sender_id }}">
                     <div class="received-wrap">
@@ -67,8 +67,7 @@
         {% endfor %}
     </div>
     <div class="bottom-bar">
-        <form action="{{ url_for("messages", user_id=active_user.id, group_id=active_group.id   ) }}" method="post">
-            <input type="text" name="user_id" placeholder="user ID">
+        <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post">
             <input type="group" name="group_id" placeholder="group ID">
             <input type="text" name="msg" placeholder="Votre message">
             <input type="submit">
