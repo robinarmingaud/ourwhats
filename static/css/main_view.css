@@ -85,124 +85,120 @@ ul {
 }
 
 .msg-section{
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    border: 0;
-    background-color: black;
-    color: white;
-    font-family: Helvetica;
-    overflow-y: auto;
-}
-
-.received-row {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-}
-
-.name {
-    font: normal 1em 'Trebuchet MS';
-    margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  border: 0;
+  padding: 0;
+  background-color: black;
+  color: white;
+  font-family: Helvetica;
 }
 
 .pp {
-    transform: scale(0.8);
-    border-radius: 100%;
-    position: relative;
-    justify-self: start;
-    align-self: start;
+  transform: scale(0.8);
+  border-radius: 100%;
+  position: relative;
 
-    width: 50px;
-    margin: 0;
+  height: 50px;
+  width: 50px;
+  margin: 0;
 }
 
-.received-wrap{
-    max-width: 50%;
-}
-.received-bubble {
-    background-color: #4b4b4b;
-    padding: 0.8em 1em;
-    text-align: left;
-    border-radius: 0 1em 1em 1em;
-    display: inline-block;
-    overflow-wrap: break-word;
-    position: relative;
-
-    font-size: 1em;
-    font-weight: 200;
-
-    margin: 0;
+.name {
+  font: normal 1em 'Trebuchet MS';
+  margin: 0;
 }
 
 p{
-    margin: 0;
+  margin: 0;
 }
 
 .date {
-    margin: 0;
-    position: absolute;
-    visibility: hidden;
-    bottom: -25px;
-    font: italic 0.8em 'Trebuchet MS';
-    color: black;
-    background-color: #FFFC;
-    padding: 5px;
-    border-radius: 6px;
-    width: max-content;
-    text-align: center;
-    z-index: 1;
+  margin: 0;
+  visibility: hidden;
+  position: absolute;
+  right: 10px;
+  font: italic 0.8em 'Trebuchet MS';
+  color: black;
+  background-color: #FFFC;
+  padding: 5px;
+  border-radius: 6px;
+  width: max-content;
+  text-align: center;
+  z-index: 1;
 }
 
-.received-bubble .date {
-    left: 0;
-}
-
-.received-bubble:hover .date, .sent-bubble:hover .date {
-    visibility: visible;
-}
-.received-file{
-    max-width: 50%;
-    border-radius: 0 1em 1em 1em;
-}
-
-.sent-row{
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    margin: 10px 0 10px 0;
-}
-
-.sent-bubble{
-    background-color: red;
-    padding: 0.8em 1em;
-    text-align: left;
-    border-radius: 1em 0 1em 1em;
-    position: relative;
-    max-width: 70%;
-
-    font-size: 1em;
-    font-weight: 200;
-
-    margin: 0;
+.received-message:hover .date, .sent-message:hover .date {
+  visibility: visible;
 }
 
 .sent-bubble .date {
-    right: 0;
+  right: 0;
 }
 
-.top-bar {
-    border: solid 1px yellow;
-    width: 100%;
+.received-block{
+  width: 80%;
+  display: flex;
+
+  align-items: flex-end;
 }
 
-.bottom-bar{
-    border: solid 1px green;
-    width: 100%;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
+.sent-block{
+  width: 80%;
+  margin: 20px 0;
+  margin-left: auto;
+  display: flex;
+  align-items: flex-end;
 }
 
+.received-message{
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+
+  border-radius: 1em 1em 1em 0;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.sent-message{
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+
+  border-radius: 1em 1em 0 1em;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.text{
+  background-color: #4b4b4b;
+  padding: 0.8em 1em;
+  text-align: left;
+  border-radius: inherit;
+  display: inline-block;
+  overflow-wrap: break-word;
+  position: relative;
+  width: fit-content;
+
+  font-size: 1em;
+  font-weight: 200;
+
+  margin: 1px 0;
+}
+
+.sent-message .text{
+  background-color: cornflowerblue;
+}
+
+.img{
+  max-width: 100%;
+  height: 30vh;
+  border-radius: inherit;
+  margin: 1px 0;
+  margin-left: inherit;
+  margin-right: inherit;
+}

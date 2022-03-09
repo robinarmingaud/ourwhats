@@ -156,16 +156,9 @@ def messages(group_id):
             filename=filename
         )
 
-    def get_sender_name(msg):
-        users = User.query.all()
-        for user in users:
-            if user.id == msg.sender_id:
-                return user.name
-        return "???"
-
     # GET method
     return flask.render_template("main_view.html.jinja2",
-                                 groups=groups, active_group=active_group, errors=errors, get_sender_name=get_sender_name)
+                                 groups=groups, active_group=active_group, errors=errors, get_sender=get_sender)
 
 
 @app.route('/login', methods=['POST','GET'])
@@ -261,7 +254,7 @@ def debug_messages():
 
     groups = Group.query.all()
 
-    return flask.render_template('debug/messages.html.jinja2', groups=groups)
+    return flask.render_template('debug/messages2.html.jinja2', groups=groups, msg_chain=msg_chain, get_sender=get_sender)
 
 #form is invalid if: user or group doesn't exist, user is not in group, msg is empty
 def is_msg_form_valid(form):
@@ -361,6 +354,27 @@ def user_loader(user_id):
 
 def allowed_file(filename):
     return ('.' in filename) and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def msg_chain(group):
+    L, l = [], []
+    looked_user_id = group.messages[0].sender_id
+    for msg in group.messages:
+        if msg.sender_id == looked_user_id:
+            l.append(msg)
+        else:
+            L.append(l)
+            l = [msg]
+            looked_user_id = msg.sender_id
+    L.append(l)
+    return L
+
+def get_sender(msg):
+    users = User.query.all()
+    for user in users:
+        if user.id == msg.sender_id:
+            return user
+    print("ERREUR : can't find sender with such id :", msg.sender_id)
+    return "???"
 
 # def change_profile_pic(user, ):
 #     user.has_profile_pic = True
