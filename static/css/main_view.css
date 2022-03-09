@@ -150,7 +150,7 @@ p{
     background-color: #FFFC;
     padding: 5px;
     border-radius: 6px;
-    width: auto;
+    width: max-content;
     text-align: center;
     z-index: 1;
 }
@@ -161,6 +161,10 @@ p{
 
 .received-bubble:hover .date, .sent-bubble:hover .date {
     visibility: visible;
+}
+.received-file{
+    max-width: 50%;
+    border-radius: 0 1em 1em 1em;
 }
 
 .sent-row{

@@ -2,7 +2,7 @@
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for("static", filename="css/messages.css") }}"/>
+    <link rel="stylesheet" href="{{ url_for("static", filename="css/main_view.css") }}"/>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="../../static/js/messages.js"></script>
 </head>
@@ -21,19 +21,19 @@
                             location.href = "/{{ group.id }}";
                         };
                     </script>
-		            <div class="chat_people">
-			            <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-			                <div class="chat_ib">
-                                    {% set msg = group.messages | last %}
-                                        <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
-                                        <p class="message_notif"> {{ get_sender_name(msg) }} : {{ msg.content }} </p>
-                            </div>
+                    <div class="chat_people">
+                        <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                        <div class="chat_ib">
+                            {% set msg = group.messages | last %}
+                            <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
+                            <p class="message_notif"> {{ get_sender_name(msg) }} : {{ msg.content }} </p>
                         </div>
                     </div>
+                </div>
             {% endfor %}
-        <script type="text/javascript">
-            document.getElementById("{{active_group.id}}").style.backgroundColor="#dddddd";
-        </script>
+            <script type="text/javascript">
+                document.getElementById("{{active_group.id}}").style.backgroundColor="#dddddd";
+            </script>
         </ul>
     </div>
 </div>
@@ -43,17 +43,24 @@
     </div>
     <div class="msg-section">
         {% for msg in active_group.messages %}
+
             {% if msg.sender_id!=current_user.id %}
                 <div class="received-row">
-                    <img class="pp" src="static/profile_pics/{{ msg.sender_id | default('default') }}.jpg">
+                    <img class="pp" src="{{ url_for('static', filename = 'profile_pics/'+ msg.sender_id|string +".jpg")}}">
                     <div class="received-wrap">
                         <h2 class="name">{{ get_sender_name(msg) }}</h2>
                         <div class="received-bubble">
                             <p>{{ msg.content }}</p>
                             <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
                         </div>
+                        {% if msg.filename %}
+                            <div class="received-row">
+                                <img class="received-file" src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}">
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
+
             {% else %}
                 <div class="sent-row">
                     <div class="sent-bubble">
@@ -65,8 +72,9 @@
         {% endfor %}
     </div>
     <div class="bottom-bar">
-        <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post">
+        <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post" enctype="multipart/form-data">
             <input type="text" name="msg" placeholder="Votre message">
+            <input type="file" name="file">
             <input type="submit">
         </form>
     </div>

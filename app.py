@@ -1,3 +1,4 @@
+import glob
 import os
 from datetime import datetime
 
@@ -33,6 +34,9 @@ with app.test_request_context():
 def db_clean_all():
     db.drop_all()
     db.create_all()
+    #clean_uploads()
+
+    create_user('OurWhats', id=0)
     return "Cleaned!"
 
 @app.route('/clean/<table>')
@@ -53,6 +57,7 @@ def db_clean_table(table):
         return 'Participations cleaned!'
     elif table == 'msg' :
         clean_model_table(Message)
+        #clean_uploads()
         return 'Messages cleaned !'
     return "/clean/['users', 'groups', 'part', 'msg']"
 
@@ -63,8 +68,8 @@ def clean_model_table(model):
     db.create_all()
     return
 
-def create_user(name):
-    user = User(name=name)
+def create_user(name, id):
+    user = User(name=name, id=id)
     db.session.add(user)
     db.session.commit()
     return user
@@ -84,6 +89,12 @@ def create_group(name):
     group = Group(name=name)
     db.session.add(group)
     db.session.commit()
+
+    ourwhats_user=User.query.filter_by(user_id=0).first()
+    join_group(ourwhats_user, group)
+    create_message(content='Ce groupe est vide !',
+                   sender=ourwhats_user,
+                   group=group)
     return group
 
 def delete_group(group):
@@ -114,6 +125,12 @@ def join_group(user, group):
 def is_in_group(user_id, group_id):
     return db.session.query(group_user_table).filter_by(group_id=group_id, user_id=user_id).first() is not None
 
+def clean_uploads():
+    files = glob.glob(UPLOAD_FOLDER)
+    for f in files:
+        os.remove(f)
+    return
+
 @login_required
 @app.route('/<group_id>', methods=['POST','GET'])
 def messages(group_id):
@@ -122,12 +139,22 @@ def messages(group_id):
 
     form = flask.request.form
     msg_form_is_valid, errors = is_msg_form_valid(form)
-    if msg_form_is_valid:
+
+    if msg_form_is_valid and flask.request.method=='POST':
         #POST method
+        filename = ''
+        file = flask.request.files['file']
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         create_message(
             content=form.get('msg'),
             user=current_user,
-            group=active_group)
+            group=active_group,
+            filename=filename
+        )
 
     def get_sender_name(msg):
         users = User.query.all()
@@ -226,7 +253,8 @@ def debug_messages():
 
         create_message(
             content=form.get('msg'),
-            user=User.query.filter_by(id=form.get('user_id')).first(),            group=Group.query.filter_by(id=form.get('group_id')).first(),
+            user=User.query.filter_by(id=form.get('user_id')).first(),
+            group=Group.query.filter_by(id=form.get('group_id')).first(),
             filename=filename
         )
     # GET method
