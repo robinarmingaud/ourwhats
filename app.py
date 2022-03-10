@@ -158,7 +158,8 @@ def messages(group_id):
 
     # GET method
     return flask.render_template("main_view.html.jinja2",
-                                 groups=groups, active_group=active_group, errors=errors, get_sender=get_sender)
+                                 groups=groups, active_group=active_group, errors=errors,
+                                 msg_chain=msg_chain, get_sender=get_sender) #tool functions
 
 
 @app.route('/login', methods=['POST','GET'])
@@ -366,7 +367,8 @@ def msg_chain(group):
             l = [msg]
             looked_user_id = msg.sender_id
     L.append(l)
-    return L
+    return L[::-1]
+    #we return the reversed list in order to display correctly the messages in the flex-direction: column-reverse
 
 def get_sender(msg):
     users = User.query.all()
@@ -375,6 +377,8 @@ def get_sender(msg):
             return user
     print("ERREUR : can't find sender with such id :", msg.sender_id)
     return "???"
+
+
 
 # def change_profile_pic(user, ):
 #     user.has_profile_pic = True

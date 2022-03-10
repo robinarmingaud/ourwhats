@@ -2,28 +2,35 @@ html, body{
     margin: 0;
     padding: 0;
     background-color: black;
-    height: 100%
+    overflow: hidden;
+
+    height: 100vh;
 }
 
 body{
-    display: flex;
+    display: grid;
+    grid-template-columns: 30% auto;
+    grid-template-rows: 50px 50px auto 50px;
 }
 
-.sidebar{
-    margin :0;
-    padding : 0;
-    width: 30%;
-    background-color: #FFFFFF;
-    height: 100%;
-    overflow: auto;
-}
-.message-history{
+
+.group-list{
     border-top: 1px solid #000000;
+    overflow: scroll;
     height: 100%;
+    background-color: white;
+
+    grid-column: 1;
+    grid-row: 3 / span 2;
 }
-.input-group{
+
+.corner-menu{
     padding : 10px;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    background-color: dimgrey;
 }
+
 #filter-friends{
     margin-left :10px;
 }
@@ -73,132 +80,162 @@ ul {
     margin: 8px 0 0;
 }
 
-.main-panel{
-    width: 70vw;
+.top-bar{
+    grid-column: 2;
+    grid-row: 1;
+    background-color: dimgrey;
+}
+
+.bottom-bar{
+    grid-column: 2;
+    grid-row: 4;
+    background-color: dimgrey;
+}
+
+.msg-section{
+    grid-column: 2;
+    grid-row: 2 / span 2;
+    overflow-y: scroll;
     box-sizing: border-box;
+
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     border: 0;
+    padding: 0;
     background-color: black;
     color: white;
     font-family: Helvetica;
 }
 
-.msg-section{
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  border: 0;
-  padding: 0;
-  background-color: black;
-  color: white;
-  font-family: Helvetica;
+.row{
+    width: 100%;
+    margin: auto;
 }
 
 .pp {
-  transform: scale(0.8);
-  border-radius: 100%;
-  position: relative;
+    transform: scale(0.8);
+    border-radius: 100%;
+    position: relative;
 
-  height: 50px;
-  width: 50px;
-  margin: 0;
+    height: 50px;
+    width: 50px;
+    margin: 0;
 }
 
 .name {
-  font: normal 1em 'Trebuchet MS';
-  margin: 0;
+    font: normal 1em 'Trebuchet MS';
+    margin: 0;
 }
 
 p{
-  margin: 0;
+    margin: 0;
 }
 
 .date {
-  margin: 0;
-  visibility: hidden;
-  position: absolute;
-  right: 10px;
-  font: italic 0.8em 'Trebuchet MS';
-  color: black;
-  background-color: #FFFC;
-  padding: 5px;
-  border-radius: 6px;
-  width: max-content;
-  text-align: center;
-  z-index: 1;
+    margin: 0;
+    visibility: hidden;
+    position: absolute;
+    left: -50px;
+    bottom: -1.5em;
+
+    font: italic 0.8em 'Trebuchet MS';
+    color: black;
+    background-color: #FFFC;
+    padding: 0.2em 0.5em;
+    border-radius: 9px;
+    width: max-content;
+    text-align: right;
+    z-index: 1;
+
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
 }
 
 .received-message:hover .date, .sent-message:hover .date {
-  visibility: visible;
+    visibility: visible;
+    opacity: 1;
 }
 
-.sent-bubble .date {
-  right: 0;
+.received-message:hover:after .date{
+    opacity:1;
 }
 
 .received-block{
-  width: 80%;
-  display: flex;
+    max-width: 80%;
+    display: flex;
 
-  align-items: flex-end;
+    align-items: flex-end;
 }
 
 .sent-block{
-  width: 80%;
-  margin: 20px 0;
-  margin-left: auto;
-  display: flex;
-  align-items: flex-end;
+    max-width: 80%;
+    margin: 20px 0;
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
 }
 
+.wrapper{
+    display: flex;
+    flex-direction: column;
+}
 .received-message{
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
 
-  border-radius: 1em 1em 1em 0;
-  margin-left: 0;
-  margin-right: auto;
+    /*has to be in order to position the absolute date*/
+    position: relative;
+
+    border-radius: 1em 1em 1em 0;
+    margin: 2px 0;
+    margin-left: 0;
+    margin-right: auto;
 }
 
 .sent-message{
-  display: flex;
-  flex-direction: column;
-  width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: fit-content;
 
-  border-radius: 1em 1em 0 1em;
-  margin-left: auto;
-  margin-right: 0;
+    /*has to be in order to position the absolute date*/
+    position: relative;
+
+    border-radius: 1em 1em 0 1em;
+    margin: 2px 0;
+    margin-left: auto;
+    margin-right: 0;
 }
 
 .text{
-  background-color: #4b4b4b;
-  padding: 0.8em 1em;
-  text-align: left;
-  border-radius: inherit;
-  display: inline-block;
-  overflow-wrap: break-word;
-  position: relative;
-  width: fit-content;
+    background-color: #4b4b4b;
+    padding: 0.3em 1em;
+    text-align: left;
+    border-radius: inherit;
+    display: inline-block;
+    overflow-wrap: break-word;
+    position: relative;
+    width: fit-content;
 
-  font-size: 1em;
-  font-weight: 200;
-
-  margin: 1px 0;
+    font-size: 1em;
+    font-weight: 200;
 }
 
 .sent-message .text{
-  background-color: cornflowerblue;
+    background-color: cornflowerblue;
 }
 
-.img{
-  max-width: 100%;
-  height: 30vh;
-  border-radius: inherit;
-  margin: 1px 0;
-  margin-left: inherit;
-  margin-right: inherit;
+.attachment-wrap{
+    width: fit-content;
+    border-radius: inherit;
+}
+
+.attachment{
+    max-width: 100%;
+    height: 30vh;
+    border-radius: inherit;
+
+    margin-left: inherit;
+    margin-right: inherit;
 }

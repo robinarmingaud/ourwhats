@@ -7,44 +7,94 @@
     <script src="../../static/js/messages.js"></script>
 </head>
 <body>
-<div class="sidebar">
-    <div class="input-group">
-        <p>{{ current_user.name }}</p>
-        <input type="text" id="filter-friends" class="form-control" placeholder="Search" aria-label="Search" />
-    </div>
-    <div class="message-history">
-        <ul>
-            {% for group in groups if current_user in group.users %}
-                <div class="chat_list" id="{{ group.id }}" data-name="{{ group.name }}">
-                    <script type="text/javascript">
-                        document.getElementById("{{ group.id }}").onclick = function () {
-                            location.href = "/{{ group.id }}";
-                        };
-                    </script>
-                    <div class="chat_people">
-                        <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
-                        <div class="chat_ib">
-                            {% set msg = group.messages | last %}
-                            <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
-                            <p class="message_notif"> {{ get_sender(msg).name }} : {{ msg.content }} </p>
-                        </div>
+<div class="corner-menu">
+    <p>{{ current_user.name }}</p>
+    <input type="text" id="filter-friends" class="form-control" placeholder="Search" aria-label="Search" />
+</div>
+<div class="group-list">
+    <ul>
+        {% for group in groups if current_user in group.users %}
+            <div class="chat_list" id="{{ group.id }}" data-name="{{ group.name }}">
+                <script type="text/javascript">
+                    document.getElementById("{{ group.id }}").onclick = function () {
+                        location.href = "/{{ group.id }}";
+                    };
+                </script>
+                <div class="chat_people">
+                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                    <div class="chat_ib">
+                        {% set msg = group.messages | last %}
+                        <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
+                        <p class="message_notif"> {{ get_sender(msg).name }} : {{ msg.content }} </p>
                     </div>
                 </div>
-            {% endfor %}
-            <script type="text/javascript">
-                document.getElementById("{{active_group.id}}").style.backgroundColor="#dddddd";
-            </script>
-        </ul>
-    </div>
+            </div>
+        {% endfor %}
+        <script type="text/javascript">
+            document.getElementById("{{active_group.id}}").style.backgroundColor="#dddddd";
+        </script>
+    </ul>
 </div>
-<div class="main-panel">
-    <div class="top-bar">
-        <h1>{{ active_group.name }}</h1>
-    </div>
-    <div class="msg-section">
-        {% for msg in active_group.messages %}
-            {#<!--First message-->
-            {% if loop.index==1 %}
+<div class="top-bar">
+    <h1>{{ active_group.name }}</h1>
+</div>
+<div class="msg-section">
+
+    {% for block in msg_chain(active_group) %}
+        <div class="row">
+            {% set sender = get_sender(block[0]) %}
+            {% if sender!=current_user %}
+                <!-- msg is from another user -->
+                <div class="received-block">
+                    <img class="pp" src="{{ url_for('static', filename = 'profile_pics/'+ sender.id|string +".jpg")}}">
+                    <div class="wrapper">
+                        <h2 class="name">{{ sender.name }}</h2>
+                        {% for msg in block %}
+                            <div class="received-message">
+                                <div class="text">
+                                    <p>{{ msg.content }}</p>
+                                </div>
+                                {% if msg.filename %}
+                                    <a class="attachment-wrap"
+                                       href="{{ url_for('static', filename = '/uploads/'+msg.filename) }}"
+                                       target="_blank">
+                                        <img class="attachment"
+                                             src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}">
+                                    </a>
+                                {% endif %}
+                                <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <!-- msg is from current_user -->
+                <div class="sent-block">
+                    <div class="wrapper">
+                        {% for msg in block %}
+                            <div class="sent-message">
+                                <div class="text">
+                                    <p>{{ msg.content }}</p>
+                                </div>
+                                {% if msg.filename %}
+                                    <a class="attachment-wrap"
+                                       href="{{ url_for('static', filename = '/uploads/'+msg.filename) }}"
+                                       target="_blank">
+                                        <img class="attachment"
+                                             src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}">
+                                    </a>
+                                {% endif %}
+                                <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    {#{% for msg in active_group.messages %}
+
                 <div class="row">
                     <div class="block">
                         <div class="wrapper">
@@ -56,40 +106,39 @@
                             </div>
                         </div>
                     </div>
-                </div>#}
-                {% if msg.sender_id!=current_user.id %}
-                    <div class="received-row">
-                        <img class="pp" src="{{ url_for('static', filename = 'profile_pics/'+ msg.sender_id|string +".jpg")}}">
-                        <div class="received-wrap">
-                            <h2 class="name">{{ get_sender(msg).name }}</h2>
-                            <div class="received-bubble">
-                                <p>{{ msg.content }}</p>
-                                <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
-                            </div>
-                            {% if msg.filename %}
-                                <div class="received-row">
-                                    <img class="received-file" src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}">
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                {% else %}
-                    <div class="sent-row">
-                        <div class="sent-bubble">
+                </div>
+            {% if msg.sender_id!=current_user.id %}
+                <div class="received-row">
+                    <img class="pp" src="{{ url_for('static', filename = 'profile_pics/'+ msg.sender_id|string +".jpg")}}">
+                    <div class="received-wrap">
+                        <h2 class="name">{{ get_sender(msg).name }}</h2>
+                        <div class="received-bubble">
                             <p>{{ msg.content }}</p>
                             <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
                         </div>
+                        {% if msg.filename %}
+                            <div class="received-row">
+                                <img class="received-file" src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}">
+                            </div>
+                        {% endif %}
                     </div>
-                {% endif %}
-        {% endfor %}
-    </div>
-    <div class="bottom-bar">
-        <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post" enctype="multipart/form-data">
-            <input type="text" name="msg" placeholder="Votre message">
-            <input type="file" name="file">
-            <input type="submit">
-        </form>
-    </div>
+                </div>
+
+            {% else %}
+                <div class="sent-row">
+                    <div class="sent-bubble">
+                        <p>{{ msg.content }}</p>
+                        <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}#}
+</div>
+<div class="bottom-bar">
+    <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post" enctype="multipart/form-data">
+        <input type="text" name="msg" placeholder="Votre message">
+        <input type="file" name="file">
+        <input type="submit">
+    </form>
 </div>
 </body>
