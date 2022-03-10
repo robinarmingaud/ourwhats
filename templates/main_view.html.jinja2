@@ -9,7 +9,7 @@
 <body>
 <div class="corner-menu">
     <p>{{ current_user.name }}</p>
-    <input type="text" id="filter-friends" class="form-control" placeholder="Search" aria-label="Search" />
+    <input type="text" id="filter-friends" class="form-control" placeholder="Rechercher un message" aria-label="Search" />
 </div>
 <div class="group-list">
     <ul>
@@ -92,47 +92,6 @@
             {% endif %}
         </div>
     {% endfor %}
-
-    {#{% for msg in active_group.messages %}
-
-                <div class="row">
-                    <div class="block">
-                        <div class="wrapper">
-                            <div class="received-message">
-                                <div class="text">
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% if msg.sender_id!=current_user.id %}
-                <div class="received-row">
-                    <img class="pp" src="{{ url_for('static', filename = 'profile_pics/'+ msg.sender_id|string +".jpg")}}">
-                    <div class="received-wrap">
-                        <h2 class="name">{{ get_sender(msg).name }}</h2>
-                        <div class="received-bubble">
-                            <p>{{ msg.content }}</p>
-                            <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
-                        </div>
-                        {% if msg.filename %}
-                            <div class="received-row">
-                                <img class="received-file" src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}">
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-            {% else %}
-                <div class="sent-row">
-                    <div class="sent-bubble">
-                        <p>{{ msg.content }}</p>
-                        <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}#}
 </div>
 <div class="bottom-bar">
     <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post" enctype="multipart/form-data">
@@ -141,4 +100,20 @@
         <input type="submit">
     </form>
 </div>
+<!--
+A AJOUTER :
+-plusieurs PJ à un message (kwargs ?) (est-ce vraiment nécessaire ?)
+-PJ non images (pdf etc.)
+
+-notifications messages non lus -> application qui se met à jour toute seule ?
+
+-tableau de bord avec volumétrie
+
+faire un outil de recherche à la WHATSAPP (>>>> Messenger) qui permet tout ça :
+-chercher un utilisateur pour lui envoyer un message
+-chercher un groupe pour le rejoindre
+-créer un groupe
+-chercher un message
+
+-->
 </body>

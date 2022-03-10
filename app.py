@@ -34,9 +34,10 @@ with app.test_request_context():
 def db_clean_all():
     db.drop_all()
     db.create_all()
-    #clean_uploads()
 
-    create_user('OurWhats', id=0)
+    db.session.add(User(name='OurWhats',id=0))
+    db.session.commit()
+    #clean_uploads()
     return "Cleaned!"
 
 @app.route('/clean/<table>')
@@ -68,8 +69,8 @@ def clean_model_table(model):
     db.create_all()
     return
 
-def create_user(name, id):
-    user = User(name=name, id=id)
+def create_user(name):
+    user = User(name=name)
     db.session.add(user)
     db.session.commit()
     return user
@@ -90,11 +91,12 @@ def create_group(name):
     db.session.add(group)
     db.session.commit()
 
-    ourwhats_user=User.query.filter_by(user_id=0).first()
-    join_group(ourwhats_user, group)
-    create_message(content='Ce groupe est vide !',
-                   sender=ourwhats_user,
-                   group=group)
+    ourwhats = User.query.filter_by(id=0).first()
+    join_group(ourwhats, group)
+    create_message(user=ourwhats,
+                   group=group,
+                   content='Nouveau groupe !',
+                   filename='')
     return group
 
 def delete_group(group):
@@ -263,7 +265,7 @@ def is_msg_form_valid(form):
     errors = []
 
     content = form.get('msg', "")
-    if content == "":
+    if content == "" :
         result = False
         errors += ['msg field is empty']
 
