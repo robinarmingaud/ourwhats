@@ -2,16 +2,16 @@ import datetime
 
 from database.database import db
 
-group_user_table = db.Table('participation',
-    db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('last_read_time', db.DateTime, default=datetime.date.min)
-)
+participation_table = db.Table('participation',
+                               db.Column('group_id', db.Integer, db.ForeignKey('group.id')),
+                               db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+                               db.Column('last_read_time', db.DateTime, default=datetime.date.min)
+                               )
 
 class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
-    users = db.relationship('User', backref='groups', secondary=group_user_table)
+    users = db.relationship('User', backref='groups', secondary=participation_table)
     messages = db.relationship('Message', backref='group')
 
 class User(db.Model):
@@ -35,7 +35,6 @@ class User(db.Model):
     def is_anonymous(self):
         return False
 
-    #https://www.codestudyblog.com/cnb2001/0123091336.html
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)

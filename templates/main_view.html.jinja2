@@ -51,7 +51,9 @@
                     };
                 </script>
                 <div class="chat_people">
-                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                    <div class="new-messages-badge">
+                        <span>{{ unread_messages_count(current_user, group) }} message(s) non lus</span>
+                    </div>
                     <div class="chat_ib">
                         {% set msg = group.messages | last %}
                         <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>

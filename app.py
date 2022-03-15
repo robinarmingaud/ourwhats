@@ -7,7 +7,7 @@ from flask import redirect, url_for
 from flask_login import login_required, LoginManager, login_user, current_user, logout_user
 from werkzeug.utils import secure_filename
 from database.database import db, init_database
-from database.models import Group, User, Message, group_user_table, Upload
+from database.models import Group, User, Message, Upload, participation_table
 
 #https://stackoverflow.com/questions/44926465/upload-image-in-flask
 UPLOAD_FOLDER = 'static/uploads'
@@ -53,7 +53,7 @@ def db_clean_table(table):
             delete_group(group)
         return 'Groups cleaned!'
     elif table == 'part':
-        group_user_table.drop()
+        db.session.query(participation_table).drop()
         db.create_all()
         return 'Participations cleaned!'
     elif table == 'msg' :
@@ -80,7 +80,7 @@ def delete_user(user):
     messages = Message.query.filter_by(sender_id=user.id).all()
     for msg in messages:
         db.session.delete(msg)
-    participations = db.session.query(group_user_table).filter_by(user_id=user.id).all()
+    participations = db.session.query(participation_table).filter_by(user_id=user.id).all()
     for part in participations:
         db.session.delete(part)
     db.session.commit()
@@ -103,7 +103,7 @@ def delete_group(group):
     messages = Message.query.filter_by(group_id=group.id).all()
     for msg in messages:
         db.session.delete(msg)
-    participations = db.session.query(group_user_table).filter_by(group_id=group.id).all()
+    participations = db.session.query(participation_table).filter_by(group_id=group.id).all()
     for part in participations:
         db.session.delete(part)
     db.session.commit()
@@ -134,7 +134,7 @@ def join_group(user, group):
 
 #checks if an user is in a group
 def is_in_group(user_id, group_id):
-    return db.session.query(group_user_table).filter_by(group_id=group_id, user_id=user_id).first() is not None
+    return db.session.query(participation_table).filter_by(group_id=group_id, user_id=user_id).first() is not None
 
 def clean_uploads():
     files = glob.glob(UPLOAD_FOLDER)
@@ -146,30 +146,26 @@ def clean_uploads():
 @app.route('/<group_id>', methods=['POST','GET'])
 def messages(group_id):
     groups = Group.query.all()
-    active_group = Group.query.filter_by(id=group_id).one()
+    active_group = Group.query.filter(Group.id==group_id).one()
+    update_last_read_time(current_user, active_group)
 
-    form = flask.request.form
-    msg_form_is_valid, errors = is_msg_form_valid(form)
+    request = flask.request
+    msg_form_is_valid, errors = is_msg_form_valid(request.form)
 
-    if msg_form_is_valid and flask.request.method=='POST':
+    if msg_form_is_valid and request.method=='POST':
         #POST method
-        attachments = flask.request.files.getlist['file[]']
-        for file in attachments:
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
-                print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-        create_message(
-            content=form.get('msg'),
+        msg = create_message(
+            content=request.form.get('msg'),
             user=current_user,
             group=active_group
         )
 
+        send_attachments(request, msg)
+
     # GET method
     return flask.render_template("main_view.html.jinja2",
                                  groups=groups, active_group=active_group, errors=errors,
-                                 msg_chain=msg_chain) #tool functions
+                                 msg_chain=msg_chain, unread_messages_count=unread_messages_count) #tool functions
 
 @app.route('/', methods=['POST','GET'])
 @app.route('/login', methods=['POST','GET'])
@@ -259,7 +255,7 @@ def debug_messages():
     # GET method
     groups = Group.query.all()
 
-    return flask.render_template('debug/messages2.html.jinja2', groups=groups, msg_chain=msg_chain, get_sender=get_sender)
+    return flask.render_template('debug/messages2.html.jinja2', groups=groups, msg_chain=msg_chain)
 
 def send_attachments(request, message):
     attachments = request.files.getlist('file[]')
@@ -385,7 +381,24 @@ def msg_chain(group):
     return L[::-1]
     #we return the reversed list in order to display correctly the messages in the flex-direction: column-reverse
 
+#adaptation du code proposé ici : https://www.codestudyblog.com/cnb2001/0123091336.html
+#@app.route('/<user_id>/<group_id>', methods=['POST','GET'])
+def unread_messages_count(user, group):
+    last_read_time = db.session.query(participation_table).filter(
+        participation_table.c.group_id==group.id,
+        participation_table.c.user_id==user.id
+    ).first()[2]
 
+    return Message.query.filter_by(group_id=group.id).\
+        filter(Message.date > last_read_time).count()
+
+def update_last_read_time(user, group):
+    db.session.query(participation_table).filter(
+        participation_table.c.group_id == group.id,
+        participation_table.c.user_id == user.id
+    ).update({'last_read_time': datetime.now()})
+    db.session.commit()
+    return
 # def change_profile_pic(user, ):
 #     user.has_profile_pic = True
 #     db.session.add(user)
