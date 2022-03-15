@@ -1,7 +1,6 @@
 A AJOUTER :
 
 -plusieurs PJ à un message (kwargs ?) (est-ce vraiment nécessaire ?)
--PJ non images (pdf etc.)
 
 DISCUSSIONS avec utilisateur
 
