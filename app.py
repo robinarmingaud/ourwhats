@@ -11,7 +11,7 @@ from database.models import Group, User, Message, group_user_table
 
 #https://stackoverflow.com/questions/44926465/upload-image-in-flask
 UPLOAD_FOLDER = 'static/uploads'
-ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'pdf'}
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'pdf', 'zip'}
 
 app = flask.Flask(__name__)
 

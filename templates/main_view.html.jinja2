@@ -81,7 +81,9 @@
                                        href="{{ url_for('static', filename = '/uploads/'+msg.filename) }}"
                                        target="_blank">
                                         <img class="attachment"
-                                             src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}">
+                                             src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}"
+                                             alt={{ msg.filename }}
+                                        >
                                     </a>
                                 {% endif %}
                                 <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
