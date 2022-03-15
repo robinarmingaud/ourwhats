@@ -169,7 +169,7 @@ def messages(group_id):
     # GET method
     return flask.render_template("main_view.html.jinja2",
                                  groups=groups, active_group=active_group, errors=errors,
-                                 msg_chain=msg_chain, get_sender=get_sender) #tool functions
+                                 msg_chain=msg_chain) #tool functions
 
 @app.route('/', methods=['POST','GET'])
 @app.route('/login', methods=['POST','GET'])
