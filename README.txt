@@ -1,7 +1,5 @@
 A AJOUTER :
 
--plusieurs PJ à un message (kwargs ?) (est-ce vraiment nécessaire ?)
-
 DISCUSSIONS avec utilisateur
 
 -notifications messages non lus -> application qui se met à jour toute seule ?

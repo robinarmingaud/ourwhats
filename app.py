@@ -385,15 +385,6 @@ def msg_chain(group):
     return L[::-1]
     #we return the reversed list in order to display correctly the messages in the flex-direction: column-reverse
 
-def get_sender(msg):
-    users = User.query.all()
-    for user in users:
-        if user.id == msg.sender_id:
-            return user
-    print("ERREUR : can't find sender with such id :", msg.sender_id)
-    return "???"
-
-
 
 # def change_profile_pic(user, ):
 #     user.has_profile_pic = True
