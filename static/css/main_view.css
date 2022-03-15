@@ -231,6 +231,10 @@ p{
     border-radius: inherit;
 }
 
+a{
+    text-decoration: none;
+}
+
 .attachment{
     max-width: 100%;
     height: 30vh;
@@ -238,4 +242,6 @@ p{
 
     margin-left: inherit;
     margin-right: inherit;
+
+    /*pour texte alt*/
 }
