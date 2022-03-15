@@ -42,7 +42,7 @@
 
     {% for block in msg_chain(active_group) %}
         <div class="row">
-            {% set sender = get_sender(block[0]) %}
+            {% set sender = block[0].sender %}
             {% if sender!=current_user %}
                 <!-- msg is from another user -->
                 <div class="received-block">
@@ -54,14 +54,16 @@
                                 <div class="text">
                                     <p>{{ msg.content }}</p>
                                 </div>
-                                {% if msg.filename %}
+                                {% for attachment in msg.attachments %}
                                     <a class="attachment-wrap"
-                                       href="{{ url_for('static', filename = '/uploads/'+msg.filename) }}"
+                                       href="{{ url_for('static', filename = '/uploads/'+attachment.filename) }}"
                                        target="_blank">
                                         <img class="attachment"
-                                             src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}">
+                                             src="{{ url_for('static', filename = '/uploads/'+ attachment.filename)}}"
+                                             alt="{{ attachment.filename }}"
+                                        >
                                     </a>
-                                {% endif %}
+                                {% endfor %}
                                 <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
                             </div>
                         {% endfor %}
@@ -76,16 +78,16 @@
                                 <div class="text">
                                     <p>{{ msg.content }}</p>
                                 </div>
-                                {% if msg.filename %}
+                                {% for attachment in msg.attachments %}
                                     <a class="attachment-wrap"
-                                       href="{{ url_for('static', filename = '/uploads/'+msg.filename) }}"
+                                       href="{{ url_for('static', filename = '/uploads/'+attachment.filename) }}"
                                        target="_blank">
                                         <img class="attachment"
-                                             src="{{ url_for('static', filename = 'uploads/'+ msg.filename)}}"
-                                             alt={{ msg.filename }}
+                                             src="{{ url_for('static', filename = '/uploads/'+ attachment.filename)}}"
+                                             alt="{{ attachment.filename }}"
                                         >
                                     </a>
-                                {% endif %}
+                                {% endfor %}
                                 <h3 class="date">{{ msg.date.strftime('%a | %H:%M') }}</h3>
                             </div>
                         {% endfor %}
@@ -98,7 +100,7 @@
 <div class="bottom-bar">
     <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post" enctype="multipart/form-data">
         <input type="text" name="msg" placeholder="Votre message">
-        <input type="file" name="file">
+        <input type="file" name="file[]" multiple>
         <input type="submit">
     </form>
 </div>

@@ -8,7 +8,7 @@
         <input type="text" name="user_id" placeholder="user ID">
         <input type="group" name="group_id" placeholder="group ID">
         <input type="text" name="msg" placeholder="Votre message">
-        <input type="file" name="file">
+        <input type="file" name="file[]" multiple>
         <input type="submit">
     </form>
 
@@ -25,15 +25,16 @@
         {{ group.id }} : {{ group.name }}
         <ul>
         {% for block in msg_chain(group) %}
-            {% set sender = get_sender(block[0]) %}
+{#            {% set sender = get_sender(block[0]) %}#}
+            {% set sender = block[0].sender %}
             <li>
                 {{ sender.id }} : {{ sender.name }}
                 <ul>
                 {% for msg in block %}
                     <li>{{ msg.date }} | {{ msg.content }}
-                        {% if msg.filename %}
-                            <a href="{{ url_for('static', filename = '/uploads/'+msg.filename) }}" target="_blank">PJ</a>
-                        {% endif %}
+                        {% for attachment in msg.attachments %}
+                            <a href="{{ url_for('static', filename = '/uploads/'+attachment.filename) }}" target="_blank">PJ</a>
+                        {% endfor %}
                     </li>
                 {% endfor %}
                 </ul>

@@ -7,7 +7,7 @@ from flask import redirect, url_for
 from flask_login import login_required, LoginManager, login_user, current_user, logout_user
 from werkzeug.utils import secure_filename
 from database.database import db, init_database
-from database.models import Group, User, Message, group_user_table
+from database.models import Group, User, Message, group_user_table, Upload
 
 #https://stackoverflow.com/questions/44926465/upload-image-in-flask
 UPLOAD_FOLDER = 'static/uploads'
@@ -95,8 +95,7 @@ def create_group(name):
     join_group(ourwhats, group)
     create_message(user=ourwhats,
                    group=group,
-                   content='Nouveau groupe !',
-                   filename='')
+                   content='Nouveau groupe !')
     return group
 
 def delete_group(group):
@@ -110,11 +109,21 @@ def delete_group(group):
     db.session.commit()
     return
 
-def create_message(content, user, group, filename):
-    msg = Message(content=content, sender=user, group=group, date=datetime.now(), filename=filename)
+def create_message(content, user, group):
+    msg = Message(content=content,
+                  sender=user,
+                  group=group,
+                  date=datetime.now())
     db.session.add(msg)
     db.session.commit()
     return msg
+
+def create_upload(message, filename):
+    upload = Upload(filename=filename,
+                    message=message)
+    db.session.add(upload)
+    db.session.commit()
+    return upload
 
 #makes an user join a group
 def join_group(user, group):
@@ -144,18 +153,17 @@ def messages(group_id):
 
     if msg_form_is_valid and flask.request.method=='POST':
         #POST method
-        filename = ''
-        file = flask.request.files['file']
-
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        attachments = flask.request.files.getlist['file[]']
+        for file in attachments:
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         create_message(
             content=form.get('msg'),
             user=current_user,
-            group=active_group,
-            filename=filename
+            group=active_group
         )
 
     # GET method
@@ -240,24 +248,29 @@ def debug_messages():
 
     if request.method =='POST' and form_is_valid:
         # POST method
-        filename=''
-        file=request.files['file']
 
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
-        create_message(
+        message = create_message(
             content=form.get('msg'),
             user=User.query.filter_by(id=form.get('user_id')).first(),
-            group=Group.query.filter_by(id=form.get('group_id')).first(),
-            filename=filename
+            group=Group.query.filter_by(id=form.get('group_id')).first()
         )
-    # GET method
+        send_attachments(request, message)
 
+    # GET method
     groups = Group.query.all()
 
     return flask.render_template('debug/messages2.html.jinja2', groups=groups, msg_chain=msg_chain, get_sender=get_sender)
+
+def send_attachments(request, message):
+    attachments = request.files.getlist('file[]')
+    for file in attachments:
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            create_upload(message=message,
+                          filename=filename)
+    return
 
 #form is invalid if: user or group doesn't exist, user is not in group, msg is empty
 def is_msg_form_valid(form):
