@@ -9,26 +9,32 @@
     <script src="../static/js/messages.js"></script>
 </head>
 <body>
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
 
-    <!-- Modal content-->
+<!-- Modal -->
+<div class="modal fade" id="myModal" data-bs-backdrop="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
+        <h5 class="modal-title" >Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Some text in the modal.</p>
+        <form action="{{ url_for("debug_messages") }}" method="post" enctype="multipart/form-data">
+        <input type="text" name="user_id" placeholder="user ID">
+        <input type="group" name="group_id" placeholder="group ID">
+        <input type="text" name="msg" placeholder="Votre message">
+        <input type="file" name="file">
+        <input type="submit">
+    </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
-
   </div>
 </div>
+
 <div class="corner-menu">
     <div class="profile-bar">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
