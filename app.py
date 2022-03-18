@@ -181,7 +181,7 @@ def messages(group_id):
     if ("Televerser" in request.form) and request.method == 'POST' :
         send_pp(request, current_user.id)
 
-    if ("ChangeUserName" in request.form) and request.method == 'POST':
+    if ("ChangeUserName" in request.form) and request.method == 'POST' and request.form.get("changeName") != "":
         current_user.name = request.form.get("changeName")
         db.session.commit()
 
