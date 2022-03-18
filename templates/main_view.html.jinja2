@@ -11,7 +11,7 @@
 <body>
 
 <!-- Modal -->
-<div class="modal fade" id="myModal" data-bs-backdrop="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false">
+<div class="modal fade" id="myModal" data-bs-backdrop="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -19,17 +19,18 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="{{ url_for("debug_messages") }}" method="post" enctype="multipart/form-data">
-        <input type="text" name="user_id" placeholder="user ID">
-        <input type="group" name="group_id" placeholder="group ID">
-        <input type="text" name="msg" placeholder="Votre message">
-        <input type="file" name="file">
-        <input type="submit">
-    </form>
+            <div class="pp-container">
+                <img class="pp-modal" src="/static/profile_pics/{{ get_user_pp(current_user) }}">
+            </div>
+            <div class="pp-upload">
+                <form class="form-label" method="post" action="{{ url_for("messages", group_id=active_group.id) }}" enctype="multipart/form-data" >Changer de photo de profil
+                    <input type="file"  name="ppfile" class="form-control"/>
+                    <input class="btn btn-primary" name="Televerser" value="Televerser" type="submit">
+                </form>
+            </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -45,7 +46,7 @@
             {{ current_user.name }}
         </button>
     </div>
-    <input type="text" id="filter-friends" class="form-control" placeholder="Rechercher un message" aria-label="Search" />
+    <input type="text" id="filter-friends" class="form-control" placeholder="Rechercher une conversation" aria-label="Search" />
 </div>
 <div class="group-list">
     <ul>
@@ -84,7 +85,7 @@
             {% if sender!=current_user %}
                 <!-- msg is from another user -->
                 <div class="received-block">
-                    <img class="pp" src="{{ url_for('static', filename = 'profile_pics/'+ sender.id|string +".jpg")}}">
+                    <img class="pp" src="/static/profile_pics/{{ get_user_pp(sender) }}">
                     <div class="wrapper">
                         <h2 class="name">{{ sender.name }}</h2>
                         {% for msg in block %}
@@ -139,7 +140,7 @@
     <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post" enctype="multipart/form-data">
         <input type="text" name="msg" placeholder="Votre message">
         <input type="file" name="file[]" multiple>
-        <input type="submit">
+        <input type="submit" name="Envoyer" value="Envoyer">
     </form>
 </div>
 

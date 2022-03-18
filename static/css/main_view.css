@@ -24,6 +24,24 @@ body{
     grid-row: 3 / span 2;
 }
 
+.pp-container{
+    display: flex;
+    justify-content: center;
+}
+
+
+.modal-body{
+    display: flex;
+    flex-direction: column;
+}
+
+.pp-modal {
+    transform: scale(0.8);
+    border-radius: 100%;
+    height: 150px;
+    width: 150px;
+}
+
 .corner-menu{
     padding : 10px;
     grid-column: 1;
@@ -33,12 +51,6 @@ body{
 
 .profile-bar{
     margin-bottom : 10px;
-}
-
-.chat_img img{
-    border-radius: 50%;
-    float: left;
-    width: 12%;
 }
 
 .chat_ib {
@@ -246,3 +258,4 @@ a{
 
     /*pour texte alt*/
 }
+

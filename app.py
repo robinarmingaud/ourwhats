@@ -7,15 +7,18 @@ from flask import redirect, url_for
 from flask_login import login_required, LoginManager, login_user, current_user, logout_user
 from werkzeug.utils import secure_filename
 from database.database import db, init_database
-from database.models import Group, User, Message, Upload, participation_table
+from database.models import Group, User, Message, Upload, participation_table, ProfileP
 
 #https://stackoverflow.com/questions/44926465/upload-image-in-flask
 UPLOAD_FOLDER = 'static/uploads'
+PP_FOLDER = 'static/profile_pics'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'pdf', 'zip'}
-
+ALLOWEDPP = {'jpg', 'jpeg', 'png', 'gif'}
 app = flask.Flask(__name__)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['PP_FOLDER'] = PP_FOLDER
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database/database.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -36,6 +39,7 @@ def db_clean_all():
     db.create_all()
 
     db.session.add(User(name='OurWhats',id=0))
+    db.session.add(ProfileP(id=0, user_id=0, filename = "0.jpg"))
     db.session.commit()
     #clean_uploads()
     return "Cleaned!"
@@ -72,6 +76,10 @@ def clean_model_table(model):
 def create_user(name):
     user = User(name=name)
     db.session.add(user)
+    db.session.commit()
+    pp = ProfileP(filename="0.jpg",
+                  user_id=user.id)
+    db.session.add(pp)
     db.session.commit()
     return user
 
@@ -125,6 +133,16 @@ def create_upload(message, filename):
     db.session.commit()
     return upload
 
+def upload_pp(user, filename):
+    old_pp = ProfileP.query.filter_by(user_id = current_user.id).one()
+    db.session.delete(old_pp)
+    db.session.commit()
+    pp = ProfileP(filename=filename,
+                  user_id=user)
+    db.session.add(pp)
+    db.session.commit()
+    return pp
+
 #makes an user join a group
 def join_group(user, group):
     group.users.append(user)
@@ -148,11 +166,9 @@ def messages(group_id):
     groups = Group.query.all()
     active_group = Group.query.filter(Group.id==group_id).one()
     update_last_read_time(current_user, active_group)
-
     request = flask.request
     msg_form_is_valid, errors = is_msg_form_valid(request.form)
-
-    if msg_form_is_valid and request.method=='POST':
+    if ("Envoyer" in request.form) and msg_form_is_valid and request.method == 'POST' :
         #POST method
         msg = create_message(
             content=request.form.get('msg'),
@@ -162,10 +178,18 @@ def messages(group_id):
 
         send_attachments(request, msg)
 
+    if ("Televerser" in request.form) and request.method == 'POST' :
+        send_pp(request, current_user.id)
+
     # GET method
     return flask.render_template("main_view.html.jinja2",
                                  groups=groups, active_group=active_group, errors=errors,
-                                 msg_chain=msg_chain, unread_messages_count=unread_messages_count) #tool functions
+                                 msg_chain=msg_chain, unread_messages_count=unread_messages_count, get_user_pp=get_user_pp) #tool functions
+
+
+
+
+
 
 @app.route('/', methods=['POST','GET'])
 @app.route('/login', methods=['POST','GET'])
@@ -262,10 +286,18 @@ def send_attachments(request, message):
     for file in attachments:
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            print(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             create_upload(message=message,
                           filename=filename)
+    return
+
+def send_pp (request, user) :
+    pp = request.files['ppfile']
+    if pp and allowed_pp(pp.filename):
+        filename = secure_filename(pp.filename)
+        pp.save(os.path.join(app.config['PP_FOLDER'], filename))
+        upload_pp(user=user,
+                  filename=filename)
     return
 
 #form is invalid if: user or group doesn't exist, user is not in group, msg is empty
@@ -367,6 +399,9 @@ def user_loader(user_id):
 def allowed_file(filename):
     return ('.' in filename) and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def allowed_pp(filename):
+    return ('.' in filename) and filename.rsplit('.', 1)[1].lower() in ALLOWEDPP
+
 def msg_chain(group):
     L, l = [], []
     looked_user_id = group.messages[0].sender_id
@@ -403,6 +438,10 @@ def update_last_read_time(user, group):
 #     user.has_profile_pic = True
 #     db.session.add(user)
 #     db.session.commit()
+
+def get_user_pp(user):
+    return ProfileP.query.filter_by(user_id = user.id).one().filename
+
 
 if __name__ == '__main__':
     app.run()

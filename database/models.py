@@ -49,3 +49,8 @@ class Upload(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.Text)
     message_id = db.Column(db.Integer, db.ForeignKey('message.id'))
+
+class ProfileP(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
