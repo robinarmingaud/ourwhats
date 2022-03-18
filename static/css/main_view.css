@@ -42,6 +42,12 @@ body{
     width: 150px;
 }
 
+.message-panel{
+    padding: 0 0 0 15px;
+    width: 88%;
+
+}
+
 .corner-menu{
     padding : 10px;
     grid-column: 1;
@@ -53,10 +59,14 @@ body{
     margin-bottom : 10px;
 }
 
+
+
 .chat_ib {
     float: left;
     padding: 0 0 0 15px;
     width: 88%;
+    display: flex;
+    flex-direction: row;
 }
 
 .chat_people {

@@ -181,6 +181,11 @@ def messages(group_id):
     if ("Televerser" in request.form) and request.method == 'POST' :
         send_pp(request, current_user.id)
 
+    if ("ChangeUserName" in request.form) and request.method == 'POST':
+        current_user.name = request.form.get("changeName")
+        db.session.commit()
+
+
     # GET method
     return flask.render_template("main_view.html.jinja2",
                                  groups=groups, active_group=active_group, errors=errors,

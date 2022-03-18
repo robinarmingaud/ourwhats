@@ -25,9 +25,14 @@
             <div class="pp-upload">
                 <form class="form-label" method="post" action="{{ url_for("messages", group_id=active_group.id) }}" enctype="multipart/form-data" >Changer de photo de profil
                     <input type="file"  name="ppfile" class="form-control"/>
-                    <input class="btn btn-primary" name="Televerser" value="Televerser" type="submit">
+                    <input class="btn btn-primary" name="Televerser" value="Envoyer" type="submit">
                 </form>
             </div>
+            <form class="form-group" method="post" action="{{ url_for("messages", group_id=active_group.id) }}">
+                <label for="changeName">Changer de nom d'utilisateur</label>
+                <input type="text" class="form-control" name="changeName" placeholder="Nouveau nom d'utilisateur">
+                <input class="btn btn-primary" name="ChangeUserName" value="Envoyer" type="submit">
+            </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -63,8 +68,11 @@
                     </div>
                     <div class="chat_ib">
                         {% set msg = group.messages | last %}
-                        <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
-                        <p class="message_notif"> {{ msg.sender.name }} : {{ msg.content }} </p>
+                        <img class="pp" src="/static/profile_pics/{{ get_user_pp(msg.sender) }}">
+                        <div class="message-panel">
+                            <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
+                            <p class="message_notif"> {{ msg.sender.name }} : {{ msg.content }} </p>
+                        </div>
                     </div>
                 </div>
             </div>
