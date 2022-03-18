@@ -25,14 +25,19 @@
             <div class="pp-upload">
                 <form class="form-label" method="post" action="{{ url_for("messages", group_id=active_group.id) }}" enctype="multipart/form-data" >Changer de photo de profil
                     <input type="file"  name="ppfile" class="form-control"/>
-                    <input class="btn btn-primary" name="Televerser" value="Envoyer" type="submit">
+                    <input style="margin-top: 10px" class="btn btn-primary" name="Televerser" value="Envoyer" type="submit">
                 </form>
             </div>
             <form class="form-group" method="post" action="{{ url_for("messages", group_id=active_group.id) }}">
                 <label for="changeName">Changer de nom d'utilisateur</label>
                 <input type="text" class="form-control" name="changeName" placeholder="Nouveau nom d'utilisateur">
-                <input class="btn btn-primary" name="ChangeUserName" value="Envoyer" type="submit">
+                <input style="margin-top: 10px" class="btn btn-primary" name="ChangeUserName" value="Envoyer" type="submit">
             </form>
+            <div class="data-visu">
+                <p>Vous avez envoyé {{ get_user_data(current_user) }} Mo de pièces jointes
+                <p>En ajoutant les pièces jointes reçues cela fait un total de {{ get_data_received(current_user) }} Mo
+                <p>Un total de {{ get_total_data() }} Mo est stocké dans nos serveurs
+            </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

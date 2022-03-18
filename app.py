@@ -12,7 +12,7 @@ from database.models import Group, User, Message, Upload, participation_table, P
 #https://stackoverflow.com/questions/44926465/upload-image-in-flask
 UPLOAD_FOLDER = 'static/uploads'
 PP_FOLDER = 'static/profile_pics'
-ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'pdf', 'zip'}
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif', 'pdf', 'zip','mp4'}
 ALLOWEDPP = {'jpg', 'jpeg', 'png', 'gif'}
 app = flask.Flask(__name__)
 
@@ -189,7 +189,9 @@ def messages(group_id):
     # GET method
     return flask.render_template("main_view.html.jinja2",
                                  groups=groups, active_group=active_group, errors=errors,
-                                 msg_chain=msg_chain, unread_messages_count=unread_messages_count, get_user_pp=get_user_pp) #tool functions
+                                 msg_chain=msg_chain, unread_messages_count=unread_messages_count,
+                                 get_user_pp=get_user_pp, get_user_data=get_user_data,
+                                 get_data_received=get_data_received, get_total_data= get_total_data) #tool functions
 
 
 
@@ -447,6 +449,34 @@ def update_last_read_time(user, group):
 def get_user_pp(user):
     return ProfileP.query.filter_by(user_id = user.id).one().filename
 
+def get_user_data(user):
+    files = db.session.query(Upload).join(Message, Message.id == Upload.message_id ).filter(Message.sender_id == user.id).all()
+    data = 0
+    for file in files :
+        filename = secure_filename(file.filename)
+        path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        data += os.path.getsize(path)
+    return round(data/10485.76)/100
+
+def get_data_received(user):
+    files = db.session.query(Upload).join(Message, Message.id == Upload.message_id).join(Group, Message.group_id == Group.id).join(participation_table).filter_by(user_id=user.id).all()
+    data = 0
+    for file in files:
+        filename = secure_filename(file.filename)
+        path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        data += os.path.getsize(path)
+    return round(data / 10485.76) / 100
+
+
+
+def get_total_data():
+    files = db.session.query(Upload).all()
+    data = 0
+    for file in files :
+        filename = secure_filename(file.filename)
+        path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        data += os.path.getsize(path)
+    return round(data/10485.76)/100
 
 if __name__ == '__main__':
     app.run()
