@@ -5,6 +5,7 @@ from datetime import datetime
 import flask
 from flask import redirect, url_for
 from flask_login import login_required, LoginManager, login_user, current_user, logout_user
+from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
 from database.database import db, init_database
 from database.models import Group, User, Message, Upload, participation_table, ProfileP
@@ -28,6 +29,8 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+socketio = SocketIO(app)
+
 db.init_app(app)
 with app.test_request_context():
     init_database()
@@ -39,7 +42,7 @@ def db_clean_all():
     db.create_all()
 
     db.session.add(User(name='OurWhats',id=0))
-    db.session.add(ProfileP(id=0, user_id=0, filename = "0.jpg"))
+    db.session.add(ProfileP(id=0, user_id=0, filename = "default.jpg"))
     db.session.commit()
     #clean_uploads()
     return "Cleaned!"
@@ -77,7 +80,7 @@ def create_user(name):
     user = User(name=name)
     db.session.add(user)
     db.session.commit()
-    pp = ProfileP(filename="0.jpg",
+    pp = ProfileP(filename="default.jpg",
                   user_id=user.id)
     db.session.add(pp)
     db.session.commit()
@@ -237,7 +240,7 @@ def debug_users():
             name=form.get('user_name')
         )
     users = User.query.all()
-    return flask.render_template('debug/users.html.jinja2', users=users)
+    return flask.render_template('debug/users.html.jinja2', users=users, get_user_pp=get_user_pp)
 
 @app.route('/debug/groups', methods=['POST','GET'])
 def debug_groups():
@@ -429,7 +432,7 @@ def unread_messages_count(user, group):
     last_read_time = db.session.query(participation_table).filter(
         participation_table.c.group_id==group.id,
         participation_table.c.user_id==user.id
-    ).first()[2]
+    ).first().last_read_time
 
     return Message.query.filter_by(group_id=group.id).\
         filter(Message.date > last_read_time).count()

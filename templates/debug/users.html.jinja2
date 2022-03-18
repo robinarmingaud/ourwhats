@@ -20,7 +20,7 @@
 
     <h1>Liste des utilisateurs :</h1>
     {% for user in users %}
-        <li><img src="{{ url_for('static', filename = 'profile_pics/'+ user.id|string +".jpg") | default(url_for('static', filename = "profile_pics/0.jpg")) }}">
+        <li><img src="{{ url_for('static', filename = 'profile_pics/'+ get_user_pp(user) )}}" alt="profile picture">
             {{ user.id }} : {{ user.name }}</li>
     {% endfor %}
 </body>
