@@ -61,7 +61,7 @@
 </div>
 <div class="group-list">
     <ul>
-        {% for group in groups|sort(attribute='date') if current_user in group.users %}
+        {% for group in ordered_groups if current_user in group.users %}
             <div class="chat_list" id="{{ group.id }}" data-name="{{ group.name }}">
                 <script type="text/javascript">
                     document.getElementById("{{ group.id }}").onclick = function () {

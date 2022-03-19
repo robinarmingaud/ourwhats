@@ -187,17 +187,15 @@ def messages(active_group_id):
         current_user.name = request.form.get("changeName")
         db.session.commit()
 
+    # returns the groups list ordered chronologically (by date of last msg sent)
+    ordered_groups = reversed(sorted(groups, key=lambda group: group.messages[-1].date))
 
     # GET method
     return flask.render_template("main_view.html.jinja2",
-                                 groups=groups, active_group=active_group, errors=errors,
+                                 ordered_groups=ordered_groups, active_group=active_group, errors=errors,
                                  msg_chain=msg_chain, unread_messages_count=unread_messages_count,
                                  get_user_pp=get_user_pp, get_user_data=get_user_data,
                                  get_data_received=get_data_received, get_total_data= get_total_data) #tool functions
-
-
-
-
 
 
 @app.route('/', methods=['POST','GET'])
