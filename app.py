@@ -5,7 +5,6 @@ from datetime import datetime
 import flask
 from flask import redirect, url_for
 from flask_login import login_required, LoginManager, login_user, current_user, logout_user
-from flask_socketio import SocketIO
 from werkzeug.utils import secure_filename
 from database.database import db, init_database
 from database.models import Group, User, Message, Upload, participation_table, ProfileP
@@ -28,8 +27,6 @@ app.secret_key = 'xxxxyyyyyzzzzz'
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
-socketio = SocketIO(app)
 
 db.init_app(app)
 with app.test_request_context():
@@ -164,10 +161,13 @@ def clean_uploads():
     return
 
 @login_required
-@app.route('/<group_id>', methods=['POST','GET'])
-def messages(group_id):
+@app.route('/<active_group_id>', methods=['POST', 'GET'])
+def messages(active_group_id):
     groups = Group.query.all()
-    active_group = Group.query.filter(Group.id==group_id).one()
+    if not is_in_group(current_user.id, active_group_id):
+        return flask.redirect(url_for('messages', active_group_id=first_group(current_user).id))
+
+    active_group = Group.query.filter(Group.id == active_group_id).one()
     update_last_read_time(current_user, active_group)
     request = flask.request
     msg_form_is_valid, errors = is_msg_form_valid(request.form)
@@ -178,7 +178,6 @@ def messages(group_id):
             user=current_user,
             group=active_group
         )
-
         send_attachments(request, msg)
 
     if ("Televerser" in request.form) and request.method == 'POST' :
@@ -215,7 +214,7 @@ def login():
         db.session.add(user)
         db.session.commit()
         login_user(user)
-        return redirect(url_for("messages", group_id=1))
+        return redirect(url_for("messages", active_group_id=first_group(user).id))
 
     users = User.query.all()
 
@@ -444,10 +443,13 @@ def update_last_read_time(user, group):
     ).update({'last_read_time': datetime.now()})
     db.session.commit()
     return
-# def change_profile_pic(user, ):
-#     user.has_profile_pic = True
-#     db.session.add(user)
-#     db.session.commit()
+
+#returns the first group that should be displayed on connection
+def first_group(user):
+    groups = Group.query.all()
+    for group in groups:
+        if is_in_group(user.id, group.id):
+            return group
 
 def get_user_pp(user):
     return ProfileP.query.filter_by(user_id = user.id).one().filename
@@ -469,8 +471,6 @@ def get_data_received(user):
         path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         data += os.path.getsize(path)
     return round(data / 10485.76) / 100
-
-
 
 def get_total_data():
     files = db.session.query(Upload).all()

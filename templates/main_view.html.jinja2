@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="../static/js/messages.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
 
@@ -15,7 +16,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" >Profile</h5>
+        <h5 class="modal-title" >Profil</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -23,12 +24,12 @@
                 <img class="pp-modal" src="/static/profile_pics/{{ get_user_pp(current_user) }}">
             </div>
             <div class="pp-upload">
-                <form class="form-label" method="post" action="{{ url_for("messages", group_id=active_group.id) }}" enctype="multipart/form-data" >Changer de photo de profil
+                <form class="form-label" method="post" action="{{ url_for("messages", active_group_id=active_group.id) }}" enctype="multipart/form-data" >Changer de photo de profil
                     <input type="file"  name="ppfile" class="form-control"/>
                     <input style="margin-top: 10px" class="btn btn-primary" name="Televerser" value="Envoyer" type="submit">
                 </form>
             </div>
-            <form class="form-group" method="post" action="{{ url_for("messages", group_id=active_group.id) }}">
+            <form class="form-group" method="post" action="{{ url_for("messages", active_group_id=active_group.id) }}">
                 <label for="changeName">Changer de nom d'utilisateur</label>
                 <input type="text" class="form-control" name="changeName" placeholder="Nouveau nom d'utilisateur">
                 <input style="margin-top: 10px" class="btn btn-primary" name="ChangeUserName" value="Envoyer" type="submit">
@@ -39,9 +40,9 @@
                 <p>Un total de {{ get_total_data() }} Mo est stocké dans nos serveurs
             </div>
       </div>
-      <div class="modal-footer">
+      {#<div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
+      </div>#}
     </div>
   </div>
 </div>
@@ -60,7 +61,7 @@
 </div>
 <div class="group-list">
     <ul>
-        {% for group in groups if current_user in group.users %}
+        {% for group in groups|sort(attribute='date') if current_user in group.users %}
             <div class="chat_list" id="{{ group.id }}" data-name="{{ group.name }}">
                 <script type="text/javascript">
                     document.getElementById("{{ group.id }}").onclick = function () {
@@ -150,7 +151,7 @@
     {% endfor %}
 </div>
 <div class="bottom-bar">
-    <form action="{{ url_for("messages", group_id=active_group.id) }}" method="post" enctype="multipart/form-data">
+    <form action="{{ url_for("messages", active_group_id=active_group.id) }}" method="post" enctype="multipart/form-data">
         <input type="text" name="msg" placeholder="Votre message">
         <input type="file" name="file[]" multiple>
         <input type="submit" name="Envoyer" value="Envoyer">

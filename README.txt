@@ -15,6 +15,4 @@ faire un outil de recherche à la WHATSAPP (>>>> Messenger) qui permet tout ça 
 -créer un groupe
 -chercher un message
 
-Fonction pour renommer les uploads afin de les rendre uniques (deux PJ ne peuvent pas avoir le mm nom)
-
 Possiblement : utiliser requêtes AJAX
