@@ -106,7 +106,13 @@ ul {
 .top-bar{
     grid-column: 2;
     grid-row: 1;
+    display: flex;
+    flex-direction: row ;
     background-color: dimgrey;
+}
+
+#filter-messages{
+    margin: 10px 10px 10px 30%;
 }
 
 .bottom-bar{

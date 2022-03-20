@@ -35,14 +35,11 @@
                 <input style="margin-top: 10px" class="btn btn-primary" name="ChangeUserName" value="Envoyer" type="submit">
             </form>
             <div class="data-visu">
-                <p>Vous avez envoyé {{ get_user_data(current_user) }} Mo de pièces jointes
+                <p>Vous avez envoyé {% set data = get_user_data(current_user) %} {{ data }} Mo de pièces jointes soit l'équivalent de {{ data*20 }} g de CO2 ou encore {{ data*0.2 }} km parcourus en voiture
                 <p>En ajoutant les pièces jointes reçues cela fait un total de {{ get_data_received(current_user) }} Mo
                 <p>Un total de {{ get_total_data() }} Mo est stocké dans nos serveurs
             </div>
       </div>
-      {#<div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>#}
     </div>
   </div>
 </div>
@@ -90,6 +87,7 @@
 </div>
 <div class="top-bar">
     <h1>{{ active_group.name }}</h1>
+    <input type="text" id="filter-messages" class="form-control" placeholder="Rechercher un message" aria-label="Search" />
 </div>
 <div class="msg-section">
 
@@ -126,6 +124,7 @@
                 <!-- msg is from current_user -->
                 <div class="sent-block">
                     <div class="wrapper">
+                        <h2 class="name" style="display: none">{{ current_user.name }}</h2>
                         {% for msg in block %}
                             <div class="sent-message">
                                 <div class="text">

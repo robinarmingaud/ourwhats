@@ -3,7 +3,7 @@ $(onLoad)
 
 function onLoad() {
     $('#filter-friends').on('input', filterRows)
-    $('.chat_list').on('click',selectChat)
+    $('#filter-messages').on('input', filterMessages)
 }
 
 function filterRows() {
@@ -16,7 +16,19 @@ function filterRows() {
       .hide()
 }
 
-function selectChat() {
-    $('.chat_list').attr('style',  'background-color:white')
-    $(this).attr('style',  'background-color:#dddddd')
+function filterMessages() {
+  let filter = this.value.toLowerCase();
+  $('.sent-block')
+      .show()
+      .filter(function() {
+        return !($(this).text().toLowerCase().includes(filter))
+      })
+      .hide()
+
+    $('.received-block')
+      .show()
+      .filter(function() {
+        return !($(this).text().toLowerCase().includes(filter))
+      })
+      .hide()
 }
