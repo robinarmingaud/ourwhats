@@ -174,6 +174,16 @@ def clean_uploads():
     return
 
 
+def quit_group(user, group):
+    if is_in_group(user.id, group.id) and db.session.query(participation_table).filter_by(user_id = user.id).count()>1 :
+        msgs = Message.query.filter(Message.sender_id == user.id, Message.group_id == group.id).all()
+        for msg in msgs:
+            db.session.delete(msg)
+        db.session.query(participation_table).filter_by(group_id = group.id, user_id = user.id).delete()
+        db.session.commit()
+    return
+
+
 @login_required
 @app.route('/<active_group_id>', methods=['POST', 'GET'])
 def messages(active_group_id):
@@ -210,9 +220,12 @@ def messages(active_group_id):
         return redirect(url_for("messages", active_group_id=active_group.id))
 
     if ("addMember" in request.form) and request.method == 'POST':
-        print(request.form.get("value"))
         join_group(User.query.filter_by(id=request.form.get("value")).one(), active_group)
         return redirect(url_for("messages", active_group_id=active_group.id))
+
+    if ('quitGroup' in request.form) and request.method == 'POST':
+        quit_group(current_user, active_group)
+        return flask.redirect(url_for('messages', active_group_id=first_group(current_user).id))
 
     # returns the groups list ordered chronologically (by date of last msg sent)
     ordered_groups = reversed(sorted(groups, key=lambda group: group.messages[-1].date))
