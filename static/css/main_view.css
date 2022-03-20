@@ -120,6 +120,11 @@ ul {
     margin-left: 10px;
 }
 
+
+#btnQuit{
+     margin-left: 10px;
+}
+
 #filter-messages{
     justify-self: flex-end;
     margin: 10px;

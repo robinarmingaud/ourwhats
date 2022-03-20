@@ -4,6 +4,7 @@ $(onLoad)
 function onLoad() {
     $('#filter-friends').on('input', filterRows)
     $('#filter-messages').on('input', filterMessages)
+    $('#filter-users').on('input', filterUsers)
 }
 
 function filterRows() {
@@ -12,6 +13,16 @@ function filterRows() {
       .show()
       .filter(function() {
         return !($(this).data('name').toLowerCase().includes(filter))
+      })
+      .hide()
+}
+
+function filterUsers() {
+    let filter = this.value.toLowerCase();
+    $('.user-list')
+      .show()
+      .filter(function() {
+        return !($(this).text().toLowerCase().includes(filter))
       })
       .hide()
 }
