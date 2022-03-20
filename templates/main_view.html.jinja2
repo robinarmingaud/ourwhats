@@ -35,7 +35,7 @@
                 <input style="margin-top: 10px" class="btn btn-primary" name="ChangeUserName" value="Envoyer" type="submit">
             </form>
             <div class="data-visu">
-                <p>Vous avez envoyé {% set data = get_user_data(current_user) %} {{ data }} Mo de pièces jointes soit l'équivalent de {{ data*20 }} g de CO2 ou encore {{ (data*20/110)|round(2) }} km parcourus en voiture
+                <p>Vous avez envoyé {% set data = get_user_data(current_user) %} {{ data }} Mo de pièces jointes soit l'équivalent de {{ data*20|round(2)}} g de CO2 ou encore {{ (data*20/110)|round(2) }} km parcourus en voiture
                 <p>En ajoutant les pièces jointes reçues cela fait un total de {{ get_data_received(current_user) }} Mo
                 <p>Un total de {{ get_total_data() }} Mo est stocké dans nos serveurs
             </div>
@@ -125,7 +125,7 @@
                         {% set msg = group.messages | last %}
                         <img class="pp" src="/static/profile_pics/{{ get_user_pp(msg.sender) }}">
                         <div class="message-panel">
-                            <h5>{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
+                            <h5 style="overflow: clip;text-overflow: ellipsis;white-space: nowrap;">{{ group.name }}  <span class="chat_date"> {{ msg.date.date()}}</span></h5>
                             <p class="message_notif"> {{ msg.sender.name }} : {{ msg.content }} </p>
                         </div>
                     </div>
@@ -138,7 +138,7 @@
     </ul>
 </div>
 <div class="top-bar">
-    <h1>{{ active_group.name }}</h1>
+    <div class = "convName">{{ active_group.name }}</div>
     <button id="btnAdd" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#newMember">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>

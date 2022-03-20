@@ -116,6 +116,14 @@ ul {
     background-color: dimgrey;
 }
 
+.convName{
+    overflow: clip;
+    text-overflow: ellipsis;
+    font-size : xx-large;
+    white-space: nowrap;
+    max-width: 30%;
+}
+
 #btnAdd{
     margin-left: 10px;
 }
