@@ -35,9 +35,54 @@
                 <input style="margin-top: 10px" class="btn btn-primary" name="ChangeUserName" value="Envoyer" type="submit">
             </form>
             <div class="data-visu">
-                <p>Vous avez envoyé {% set data = get_user_data(current_user) %} {{ data }} Mo de pièces jointes soit l'équivalent de {{ data*20 }} g de CO2 ou encore {{ data*0.2 }} km parcourus en voiture
+                <p>Vous avez envoyé {% set data = get_user_data(current_user) %} {{ data }} Mo de pièces jointes soit l'équivalent de {{ data*20 }} g de CO2 ou encore {{ (data*20/110)|round(2) }} km parcourus en voiture
                 <p>En ajoutant les pièces jointes reçues cela fait un total de {{ get_data_received(current_user) }} Mo
                 <p>Un total de {{ get_total_data() }} Mo est stocké dans nos serveurs
+            </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="newMember" data-bs-backdrop="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" >Nouveau membre</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <ul>
+                {% for user in users if user not in active_group.users %}
+                    <div class = "user-list">
+                        <img class="pp" src="/static/profile_pics/{{ get_user_pp(user) }}">
+                        {{ user.name }}
+                        <form class="form-group" method="post" action="{{ url_for("messages", active_group_id=active_group.id) }}">
+                            <input type="hidden" name="value" value="{{ user.id }}">
+                            <input class="btn btn-secondary" type="submit" name="addMember" value="Ajouter">
+                        </form>
+                    </div>
+                {% endfor %}
+                </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="newConv" data-bs-backdrop="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" >Nouvelle conversation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+        <div class="modal-body">
+            <form class="form-group" method="post" action="{{ url_for("messages", active_group_id=active_group.id) }}">
+                <input type="text" class="form-control" name="convName" placeholder="Nom de conversation">
+                <input style="margin-top: 10px" class="btn btn-primary" name="NewConv" value="Créer" type="submit">
+            </form>
             </div>
       </div>
     </div>
@@ -53,6 +98,12 @@
                 </svg>
             {{ current_user.name }}
         </button>
+        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#newConv">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+                </svg>
+              </button>
     </div>
     <input type="text" id="filter-friends" class="form-control" placeholder="Rechercher une conversation" aria-label="Search" />
 </div>
@@ -87,6 +138,12 @@
 </div>
 <div class="top-bar">
     <h1>{{ active_group.name }}</h1>
+    <button id="btnAdd" "type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#newMember">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+                </svg>
+    </button>
     <input type="text" id="filter-messages" class="form-control" placeholder="Rechercher un message" aria-label="Search" />
 </div>
 <div class="msg-section">

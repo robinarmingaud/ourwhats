@@ -59,7 +59,11 @@ body{
     margin-bottom : 10px;
 }
 
-
+.user-list{
+    display: flex;
+    align-items: center;
+    justify-content : space-between;
+}
 
 .chat_ib {
     float: left;
@@ -108,11 +112,18 @@ ul {
     grid-row: 1;
     display: flex;
     flex-direction: row ;
+    align-items: center;
     background-color: dimgrey;
 }
 
+#btnAdd{
+    margin-left: 10px;
+}
+
 #filter-messages{
-    margin: 10px 10px 10px 30%;
+    justify-self: flex-end;
+    margin: 10px;
+    width: 50%;
 }
 
 .bottom-bar{
