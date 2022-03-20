@@ -85,6 +85,8 @@ def create_user(name):
                   user_id=user.id)
     db.session.add(pp)
     db.session.commit()
+    new_conv = create_group(name="Conversation")
+    join_group(user,new_conv)
     return user
 
 
