@@ -240,7 +240,8 @@ def messages(active_group_id):
                                  ordered_groups=ordered_groups, active_group=active_group, errors=errors, users=users,
                                  msg_chain=msg_chain, unread_messages_count=unread_messages_count,
                                  get_user_pp=get_user_pp, get_user_data=get_user_data,
-                                 get_data_received=get_data_received, get_total_data=get_total_data)  # tool functions
+                                 get_data_received=get_data_received, get_total_data=get_total_data,
+                                 get_message_number=get_message_number)  # tool functions
 
 
 @app.route('/', methods=['GET'])
@@ -547,6 +548,10 @@ def get_total_data():
         path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         data += os.path.getsize(path)
     return round(data / 10485.76) / 100
+
+def get_message_number():
+    return db.session.query(Message).filter_by(sender_id=current_user.id).count()
+
 
 
 if __name__ == '__main__':
