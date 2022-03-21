@@ -1,9 +1,26 @@
-<form action="{{ url_for("login") }}" method="post">
-    <input type="text" name="user_id" placeholder="User ID">
-    <input type="submit">
-</form>
+<ul>
+<li>
+    <h1>Se connecter</h1>
 
-<h1>Liste des utilisateurs :</h1>
+    <form action="{{ url_for("login") }}" method="post">
+        <input type="text" name="user_id" placeholder="Votre ID">
+        <input type="submit">
+    </form>
+</li>
+
+<li>
+    <h1>S'inscrire</h1>
+
+    <form action="{{ url_for("create_user") }}" method="post">
+        <input type="text" name="user_name" placeholder="Votre nom">
+        <input type="submit">
+    </form>
+</li>
+
+<li>
+    <h1>Liste des utilisateurs :</h1>
     {% for user in users %}
         <li>{{ user.id }} : {{ user.name }}</li>
     {% endfor %}
+</li>
+</ul>

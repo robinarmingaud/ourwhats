@@ -85,8 +85,11 @@ def create_user(name):
                   user_id=user.id)
     db.session.add(pp)
     db.session.commit()
-    new_conv = create_group(name="Conversation")
+    new_conv = create_group(name="Démarrage")
     join_group(user,new_conv)
+    create_message(content="Bienvenue dans OurWhats !",
+                   user=User.query.filter_by(id=0).first(),
+                   group=new_conv)
     return user
 
 
@@ -207,7 +210,7 @@ def messages(active_group_id):
         )
         send_attachments(request, msg)
 
-    if ("Televerser" in request.form) and request.method == 'POST':
+    if ("Upload" in request.form) and request.method == 'POST':
         send_pp(request, current_user.id)
 
     if ("ChangeUserName" in request.form) and request.method == 'POST' and request.form.get("changeName") != "":
@@ -240,7 +243,10 @@ def messages(active_group_id):
                                  get_data_received=get_data_received, get_total_data=get_total_data)  # tool functions
 
 
-@app.route('/', methods=['POST', 'GET'])
+@app.route('/', methods=['GET'])
+def main_page_redirect():
+    return flask.redirect(url_for("login"))
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     # GET requests display the login form
