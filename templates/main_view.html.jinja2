@@ -26,7 +26,7 @@
             <div class="pp-upload">
                 <form class="form-label" method="post" action="{{ url_for("messages", active_group_id=active_group.id) }}" enctype="multipart/form-data" >Changer de photo de profil
                     <input type="file"  name="ppfile" class="form-control"/>
-                    <input style="margin-top: 10px" class="btn btn-primary" name="Televerser" value="Envoyer" type="submit">
+                    <input style="margin-top: 10px" class="btn btn-primary" name="Upload" value="Envoyer" type="submit">
                 </form>
             </div>
             <form class="form-group" method="post" action="{{ url_for("messages", active_group_id=active_group.id) }}">
@@ -133,7 +133,7 @@
             </div>
         {% endfor %}
         <script type="text/javascript">
-            document.getElementById("{{active_group.id}}").style.backgroundColor="#dddddd";
+            document.getElementById("{{active_group.id}}").style.backgroundColor="#8395a7";
         </script>
     </ul>
 </div>
