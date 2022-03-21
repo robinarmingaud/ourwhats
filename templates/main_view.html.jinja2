@@ -35,7 +35,7 @@
                 <input style="margin-top: 10px" class="btn btn-primary" name="ChangeUserName" value="Envoyer" type="submit">
             </form>
             <div class="data-visu">
-                <p>Vous avez envoyé {% set data = get_user_data(current_user) %} {{ data }} Mo de pièces jointes soit l'équivalent de {{ data*20|round(2)}} g de CO2 ou encore {{ (data*20/110)|round(2) }} km parcourus en voiture
+                <p>Vous avez envoyé {{ get_message_number() }} messages avec {%set data = get_user_data(current_user) %} {{ data }} Mo de pièces jointes soit l'équivalent de {{ data*20|round(2)}} g de CO2 ou encore {{ (data*20/110)|round(2) }} km parcourus en voiture
                 <p>En ajoutant les pièces jointes reçues cela fait un total de {{ get_data_received(current_user) }} Mo
                 <p>Un total de {{ get_total_data() }} Mo est stocké dans nos serveurs
             </div>
