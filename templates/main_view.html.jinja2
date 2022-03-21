@@ -90,6 +90,30 @@
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="convMembers" data-bs-backdrop="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" >Membres</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+                <div class="modal-body">
+                    <ul>
+                        {% for user in active_group.users %}
+                            <div class = "userMembers">
+                                <img class="pp" src="/static/profile_pics/{{ get_user_pp(user) }}">
+                                {{ user.name }}
+                            </div>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="corner-menu">
     <div class="profile-bar">
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
@@ -149,7 +173,13 @@
     <form class="form-group" method="post" action="{{ url_for("messages", active_group_id=active_group.id) }}">
         <input id="btnQuit" class="btn btn-secondary" type="submit" name="quitGroup" value="Quitter">
     </form>
-
+    <button id="btnMbr" type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#convMembers">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+                    <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+                </svg>
+        </button>
 </div>
 <div class="msg-section">
 
