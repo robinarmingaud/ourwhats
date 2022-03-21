@@ -76,7 +76,6 @@ def clean_model_table(model):
     db.create_all()
     return
 
-
 def create_user(name):
     user = User(name=name)
     db.session.add(user)
