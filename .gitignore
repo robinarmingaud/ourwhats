@@ -156,3 +156,4 @@ cython_debug/
 /static/uploads/*
 /static/profile_pics/*
 !static/profile_pics/default.jpg
+!static/uploads/.empty
