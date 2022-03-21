@@ -9,12 +9,7 @@
 </li>
 
 <li>
-    <h1>S'inscrire</h1>
-
-    <form action="{{ url_for("create_user") }}" method="post">
-        <input type="text" name="user_name" placeholder="Votre nom">
-        <input type="submit">
-    </form>
+    <a href="{{ url_for('debug_users') }}">S'inscrire</a>
 </li>
 
 <li>

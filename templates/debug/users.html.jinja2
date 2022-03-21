@@ -3,9 +3,9 @@
     <title>Créer un utilisateur</title>
 </head>
 <body>
-
+    <a href="{{ url_for('login') }}">< Se connecter<br></a>
     <form action="{{ url_for("debug_users") }}" method="post">
-        <input type="text" name="user_name" placeholder="new user name">
+        <input type="text" name="user_name" placeholder="Votre pseudo">
         <input type="submit">
     </form>
 
@@ -20,7 +20,7 @@
 
     <h1>Liste des utilisateurs :</h1>
     {% for user in users %}
-        <li><img src="{{ url_for('static', filename = 'profile_pics/'+ get_user_pp(user) )}}" alt="profile picture">
+        <li><img style="width:100px;height:100px;" src="{{ url_for('static', filename = 'profile_pics/'+ get_user_pp(user) )}}" alt="profile picture">
             {{ user.id }} : {{ user.name }}</li>
     {% endfor %}
 </body>
