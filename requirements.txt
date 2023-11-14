@@ -1,5 +1,5 @@
-flask~=1.1.2
+flask
 flask-wtf
 flask-sqlalchemy
 flask_login
-werkzeug~=1.0.1
+werkzeug
